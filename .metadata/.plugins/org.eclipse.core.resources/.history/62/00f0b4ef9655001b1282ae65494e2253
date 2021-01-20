@@ -1,0 +1,37 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="true"%>
+<%@ page import="com.vo.Member, com.proc.LoginProc" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<%
+		String userId = (String) session.getAttribute("id");
+	
+		if ( !"".equals(userId) || userId != null) {
+			response.sendRedirect("/index.jsp");	
+		}
+	%>
+	
+	<%
+		String mode = request.getParameter("mode");
+	
+		if ( "idCheck".equals(mode) ) {
+			String Id = request.getParameter("userId");
+			Member member = new Member(id);
+			
+			LoginProc lp = new LoginProc();
+			
+			if ( lp.checkId(member) ) {
+				session.setAttribute("resultCode", "0001"); // 아이디 중복
+			} else {
+				session.setAttribute("resultCode", "0000"); // 사용가능
+			}
+			response.sendRedirect("/signIn.jsp");
+		}
+	%>
+
+</body>
+</html>

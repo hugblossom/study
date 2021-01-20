@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="JSPWeb">
+    <output-path>$PROJECT_DIR$/classes/artifacts/JSPWeb</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="JSPWeb" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="module" name="mysql-connector-java-5.1.49.jar" module-name="JSPWeb" />
+          <element id="library" level="project" name="annotations-api" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

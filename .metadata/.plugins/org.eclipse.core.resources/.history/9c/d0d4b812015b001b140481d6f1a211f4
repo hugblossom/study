@@ -1,0 +1,88 @@
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+repositories {
+ 	//flatDir { dirs "src/main/webapp/WEB-INF/lib" }
+	mavenCentral()
+}
+
+ext {
+	buildDir	= "build"
+	javaVersion	= "1.8"
+}
+
+sourceCompatibility = "${javaVersion}"
+targetCompatibility = "${javaVersion}"
+
+compileJava.options.encoding = "UTF-8"
+
+group = "com.MyProject"
+
+def WEBINFPATH = "src/main/webapp/WEB-INF"
+project.webAppDirName = "src/main/webapp"
+project.ext {
+	warBaseName = "MyProject"
+	warVersion = "1.0.0-" + new Date().format("yyyyMMdd")
+}
+
+sourceSets {
+	main {
+		java {
+			srcDir "src/main/java"			
+		}
+		resources {
+			srcDir "src/main/resources"
+		}
+		java.outputDir = file("${buildDir}/classes")
+		
+		//output.classesDir = "target/classes"
+		output.resourcesDir = "${buildDir}/classes"
+	}
+	test {
+		java {
+			srcDir "src/test/java"			
+		}
+		resources {
+			srcDir "src/test/resources"
+		}
+		java.outputDir = file("${buildDir}/classes")
+		//output.classesDir = "target/test-classes"
+		output.resourcesDir = "${buildDir}/test-classes"
+	}
+
+}
+
+
+  
+dependencies {
+	providedCompile fileTree(dir: WEBINFPATH + "/lib", include: '*.jar')
+ 	testImplementation 'junit:junit:4.12'
+	compile 'javax.servlet:javax.servlet-api:3.1.0'
+	
+	// https://mvnrepository.com/artifact/javax.el/el-api
+	compile group: 'javax.el', name: 'el-api', version: '2.2'
+	
+	// https://mvnrepository.com/artifact/javax.servlet.jsp.jstl/jstl-api
+	compile group: 'javax.servlet', name: 'jstl', version: '1.2'
+	
+	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.1'
+	
+	// Apache Common IO
+	compile group: 'commons-io', name: 'commons-io', version: '2.6'
+}
+
+war {
+	baseName	= project.warBaseName
+	version		= project.warVersion
+}
+
+task explodedWar(type: Sync) {
+	println "buildDir: ${buildDir}"
+	into "${buildDir}/exploded"
+	with war
+}
+	
+	

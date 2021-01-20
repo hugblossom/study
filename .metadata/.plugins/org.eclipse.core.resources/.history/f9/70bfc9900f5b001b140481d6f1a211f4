@@ -1,0 +1,5 @@
+package com.myapp.handler;
+
+public interface requestHandler {
+	
+}

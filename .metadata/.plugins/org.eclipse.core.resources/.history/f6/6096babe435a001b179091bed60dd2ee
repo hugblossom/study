@@ -1,0 +1,39 @@
+package com.servlet;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/Dispatcher")
+public class Dispatcher extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    public Dispatcher() {
+        super();
+    }
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String uri = request.getRequestURI();
+		String path = request.getContextPath(); //서버절대주소
+		String cmd = uri.substring(path.length());
+		String view = "index.jsp";
+		
+		if ("board.do".equals(cmd)) {
+			view = "/view/board/list.jsp";
+			request.setAttribute("msg", "게시판 입니다");
+		}
+		
+		if ("board.do".equals(cmd)) {
+			view = "/view/member/list.jsp";
+			request.setAttribute("msg", "회원목록 입니다");
+		}
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
+	}
+
+}

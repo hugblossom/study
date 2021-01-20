@@ -1,0 +1,3 @@
+/main.do = com.myapp.handler.MainHandler
+/board.do = com.myapp.handler.BoardHandler
+/member.do = com.myapp.handler.MemberHandler
