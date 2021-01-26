@@ -1,0 +1,5 @@
+main.do = com.myapp.handler.main.MainHandler
+404.do = com.myapp.handler.error.Error404Handler
+
+member/join.do = com.myapp.handler.member.joinHandler
+member/login.do = com.myapp.handler.member.LoginHandler

@@ -1,0 +1,5 @@
+package com.myapp.handler.error;
+
+public class Error404Handler {
+
+}

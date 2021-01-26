@@ -1,0 +1,7 @@
+package com.myapp.handler.error;
+
+import com.myapp.handler.DefaultHandler;
+
+public class Error404Handler implements DefaultHandler {
+	
+}

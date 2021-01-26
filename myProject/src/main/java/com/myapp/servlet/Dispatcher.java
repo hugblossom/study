@@ -54,7 +54,7 @@ public class Dispatcher extends HttpServlet {
     
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		doHandle(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -62,7 +62,25 @@ public class Dispatcher extends HttpServlet {
 	}
 	
 	private void doHandle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String uri = request.getRequestURI();
+		String path = request.getContextPath();
+		String key = uri.substring(path.length() + 1);
+		String view = null;
 		
+		DefaultHandler handler = handlerMap.get(key);
+		
+		try {
+			if (handler == null) {
+				handler = handlerMap.get("404.do");
+				view = handler.doHandle(request, response);
+			}
+			view = handler.doHandle(request, response);
+		} catch ( Exception e) {
+			e.printStackTrace();
+		}
+		
+		RequestDispatcher dsp = request.getRequestDispatcher(view);
+		dsp.forward(request, response);
 	} 
 
 }

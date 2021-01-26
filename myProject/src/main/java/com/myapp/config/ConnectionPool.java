@@ -28,7 +28,7 @@ public class ConnectionPool extends HttpServlet {
     
     private void jdbcDriver() {
     	try {
-    		class.forName("com.mysql.jdbc.Driver");
+    		Class.forName("com.mysql.jdbc.Driver");
     	} catch(ClassNotFoundException cnfe) {
     		throw new RuntimeException("driver load fail", cnfe);
     	}

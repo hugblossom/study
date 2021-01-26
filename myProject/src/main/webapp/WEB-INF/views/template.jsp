@@ -7,6 +7,6 @@
 </head>
 <body>
 	<jsp:include page="./interface/header.jsp" />
-	<jsp:include page="./${requestScope.destination}" />
+	<jsp:include page="./${requestScope.jsp}" />
 </body>
 </html>
