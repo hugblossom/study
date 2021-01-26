@@ -1,0 +1,10 @@
+package com.myapp.vo;
+
+public class Member {
+	private int idx;
+	private String id;
+	private String passwd;
+	private String email;
+	
+	
+}

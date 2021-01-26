@@ -14,16 +14,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.myapp.handler.RequestHandler;
+import com.myapp.handler.DefaultHandler;
 
 public class Dispatcher extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private Map<String, RequestHandler> handlerMap = new HashMap<>();
+	String encoding = "";
+	private Map<String, DefaultHandler> handlerMap = new HashMap<>();
        
     public Dispatcher() { super(); }
     
     public void init(ServletConfig config) throws ServletException {
-    	String encoding = config.getInitParameter("encoding");
+    	encoding = config.getInitParameter("encoding");
     	String handlerConfig = config.getInitParameter("handlerProperties");
     	Properties prop = new Properties();
     	String configPath = config.getServletContext().getRealPath(handlerConfig);
@@ -42,7 +43,7 @@ public class Dispatcher extends HttpServlet {
     		
     		try {
     			Class<?> handlerClass = Class.forName(value);
-    			RequestHandler rh = (RequestHandler) handlerClass.newInstance();
+    			DefaultHandler rh = (DefaultHandler) handlerClass.newInstance();
     			handlerMap.put(key, rh);
     		} catch(ClassNotFoundException | InstantiationException | IllegalAccessException e) {
     			e.printStackTrace();
@@ -59,5 +60,9 @@ public class Dispatcher extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
+	
+	private void doHandle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+	} 
 
 }

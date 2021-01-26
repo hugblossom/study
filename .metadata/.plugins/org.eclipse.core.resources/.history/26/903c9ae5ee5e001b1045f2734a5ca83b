@@ -1,0 +1,5 @@
+package com.myapp.handler;
+
+public class DefaultHandler {
+
+}
