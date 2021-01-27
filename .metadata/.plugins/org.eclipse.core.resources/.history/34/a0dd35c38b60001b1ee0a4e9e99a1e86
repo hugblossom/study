@@ -1,0 +1,60 @@
+package com.myapp.dao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.myapp.vo.Article;
+
+public class BoardDAO {
+	
+	private Connection conn = null;
+	private PreparedStatement pstmt = null;
+	private ResultSet rs = null;
+	
+	public List<Article> getList() {
+		List<Article> articleList = new ArrayList<Article>();
+		String sql = "SELECT idx, title, writer, date FROM t_board";
+		
+		try {
+			conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:myapp");
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while ( rs.next() ) {
+				Article temp = new Article(
+					 rs.getInt("idx"),
+					 rs.getString("title"),
+					 rs.getString("writer"),
+					 rs.getString("date")
+				);
+				
+				articleList.add(temp); //List는 add() Map은 put()
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return articleList;
+	}
+	
+	public Article select(int idx) {
+		Article article = new Article();
+		String sql = "SELECT * FROM t_board WHERE idx = ?";
+		try {
+			conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:myapp");
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, idx);
+			rs = pstmt.executeQuery();
+		} catch {
+			
+		}
+		
+		return article;
+	}
+
+}
