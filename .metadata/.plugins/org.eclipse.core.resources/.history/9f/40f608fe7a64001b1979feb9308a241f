@@ -1,0 +1,10 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<div>article detail</div>
+
+	<h3>${Article.title}</h3>
+	<p>${Article.contents}</p>
+	<p>${Article.writer} / ${Article.date}</p>
+
+<a href="/board/list.do">목록으로</a>

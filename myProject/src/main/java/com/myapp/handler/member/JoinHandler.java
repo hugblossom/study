@@ -11,12 +11,15 @@ import com.myapp.dao.MemberDAO;
 import com.myapp.handler.DefaultHandler;
 
 public class JoinHandler implements DefaultHandler {
+	
 	private String view = "/WEB-INF/views/template.jsp";
 	
 	public String doHandle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
 		
 		if ( request.getMethod().equalsIgnoreCase("get") ) {
+			
 			request.setAttribute("jsp", "member/join.jsp");
+			
 		}
 		
 		if ( request.getMethod().equalsIgnoreCase("post") ) {
@@ -32,11 +35,15 @@ public class JoinHandler implements DefaultHandler {
 			boolean validate = memberDAO.insertCheck(id, pw, email);
 			
 			if ( validate ) {
+				
 				memberDAO.insert(id, pw, email);
 				
 				request.setAttribute("resultCode", "0000");
+				
 			} else {
+				
 				request.setAttribute("resultCode", "0001");
+				
 			}
 			
 			request.setAttribute("jsp", "member/join.jsp");

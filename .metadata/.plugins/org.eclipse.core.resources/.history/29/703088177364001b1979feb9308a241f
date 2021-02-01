@@ -1,0 +1,11 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<div>article write</div>
+
+<form action="/board/list.do" method="post">
+	<p>글제목</p><input type="text" />
+	<p>내용</p><textarea name="contents"></textarea>
+</form>
+<input type="submit" value="저장" />
+<a href="/board/write.do">목록으로</a>

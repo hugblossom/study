@@ -1,0 +1,9 @@
+main.do = com.myapp.handler.main.MainHandler
+404.do = com.myapp.handler.error.Error404Handler
+
+member/join.do = com.myapp.handler.member.JoinHandler
+member/login.do = com.myapp.handler.member.LoginHandler
+board/list.do = com.myapp.handler.board.ListHandler
+#board/detail.do = com.myapp.handler.board.DetailHandler
+board/write.do = com.myapp.handler.board.WriteHandler
+board/modify.do = com.myapp.handler.board.ModifyHandler
