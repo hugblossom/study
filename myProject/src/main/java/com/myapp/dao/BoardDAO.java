@@ -42,6 +42,57 @@ public class BoardDAO {
 		return articleList;
 	}
 	
+	public List<Article> getListByCondition(int pageNum, int pageCnt) {
+		List<Article> articleList = new ArrayList<Article>();
+		String sql = "SELECT * FROM t_board LIMIT ?, ?";
+		int bf = (pageCnt * (pageNum - 1)) + 1;
+		int af = pageNum * pageCnt;
+		
+		
+		try {
+			conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:myapp");
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, bf);
+			pstmt.setInt(2, af);
+			rs = pstmt.executeQuery();
+			
+			while ( rs.next() ) {
+				Article temp = new Article(
+					 rs.getInt("idx"),
+					 rs.getString("title"),
+					 rs.getString("writer"),
+					 rs.getString("date")
+				);
+				
+				articleList.add(temp); //List는 add() Map은 put()
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return articleList;
+	}
+	
+	public int getListCnt() {
+		int result = 0;
+		String sql = "SELECT COUNT(*) AS cnt FROM t_board";		
+		
+		try {
+			conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:myapp");
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			rs.next();
+			
+			result = rs.getInt("cnt");
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
 	public Article select(int idx) {
 		Article article = new Article();
 		String sql = "SELECT * FROM t_board WHERE idx = ?";
@@ -99,6 +150,28 @@ public class BoardDAO {
 			pstmt.setString(2, contents);
 			pstmt.setInt(3, idx);
 			pstmt.setString(4, writer);
+			
+			int result = pstmt.executeUpdate();
+			
+			if ( result > 0 ) {
+				flag = true;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return flag;
+	}
+	
+	public boolean delete(int idx) {
+		boolean flag = false;
+		String sql = "DELETE FROM t_board WHERE idx = ? ";
+		
+		try {
+			conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:myapp");
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, idx);
 			
 			int result = pstmt.executeUpdate();
 			

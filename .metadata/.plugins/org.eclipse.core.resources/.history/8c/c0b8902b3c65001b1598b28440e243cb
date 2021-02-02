@@ -1,0 +1,36 @@
+package com.myapp.handler.board;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.myapp.dao.BoardDAO;
+import com.myapp.handler.DefaultHandler;
+import com.myapp.vo.Article;
+
+public class DeleteHandler implements DefaultHandler {
+	private String view = "/WEB-INF/views/template.jsp";
+			
+	public String doHandle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+		
+		if ( "GET".equalsIgnoreCase(request.getMethod() ) {
+			
+		}
+		
+		if ( "POST".equalsIgnoreCase(request.getMethod() ) {
+			String paramIdx = request.getParameter("idx");
+			int idx = Integer.parseInt(paramIdx);
+			
+			BoardDAO boardDAO = new BoardDAO();
+			boolean flag = boardDAO.delete(idx);
+		}
+		
+		request.setAttribute("uri", "/board/list.do");
+		
+		return view;
+	}
+}

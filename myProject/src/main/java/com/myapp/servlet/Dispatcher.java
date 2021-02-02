@@ -79,8 +79,11 @@ public class Dispatcher extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		RequestDispatcher dsp = request.getRequestDispatcher(view);
-		dsp.forward(request, response);
+		if ( request.getAttribute("uri") != null ) {
+			response.sendRedirect(request.getContextPath() + request.getAttribute("uri") );
+		} else {
+			RequestDispatcher dsp = request.getRequestDispatcher(view);
+			dsp.forward(request, response);
+		}
 	} 
-
 }

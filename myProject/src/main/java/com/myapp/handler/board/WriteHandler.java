@@ -39,9 +39,7 @@ public class WriteHandler implements DefaultHandler {
 				request.setAttribute("resultCode", "0001");
 			}
 			
-			List<Article> articleList = boardDAO.getList();
-			request.setAttribute("articleList", articleList);
-			request.setAttribute("jsp", "board/list.jsp");
+			request.setAttribute("uri", "/board/list.do");
 			
 			return view;
 		}

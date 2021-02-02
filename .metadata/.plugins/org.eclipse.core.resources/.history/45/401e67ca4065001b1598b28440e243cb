@@ -1,0 +1,168 @@
+package com.myapp.dao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.myapp.vo.Article;
+
+public class BoardDAO {
+	
+	private Connection conn = null;
+	private PreparedStatement pstmt = null;
+	private ResultSet rs = null;
+	
+	public List<Article> getList() {
+		List<Article> articleList = new ArrayList<Article>();
+		String sql = "SELECT idx, title, writer, date FROM t_board";
+		
+		try {
+			conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:myapp");
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while ( rs.next() ) {
+				Article temp = new Article(
+					 rs.getInt("idx"),
+					 rs.getString("title"),
+					 rs.getString("writer"),
+					 rs.getString("date")
+				);
+				
+				articleList.add(temp); //List는 add() Map은 put()
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return articleList;
+	}
+	
+	public List<Article> getListByCondition(int cnt, int pageNum ) {
+		List<Article> articleList = new ArrayList<Article>();
+		String sql = "SELECT * FROM t_board LIMIT ?, ?";
+		int bf = (cnt * (pageNum - 1)) + 1;
+		int af = pageNum * cnt;
+		
+		
+		try {
+			conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:myapp");
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, bf);
+			pstmt.setInt(2, af);
+			rs = pstmt.executeQuery();
+			
+			while ( rs.next() ) {
+				Article temp = new Article(
+					 rs.getInt("idx"),
+					 rs.getString("title"),
+					 rs.getString("writer"),
+					 rs.getString("date")
+				);
+				
+				articleList.add(temp); //List는 add() Map은 put()
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return articleList;
+	}
+	
+	public Article select(int idx) {
+		Article article = new Article();
+		String sql = "SELECT * FROM t_board WHERE idx = ?";
+		try {
+			conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:myapp");
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, idx);
+			rs = pstmt.executeQuery();
+			
+			if ( rs.next() ) {
+				article.setIdx(rs.getInt("idx"));
+				article.setTitle(rs.getString("title"));
+				article.setContents(rs.getString("Contents"));
+				article.setWriter(rs.getString("Writer"));
+				article.setDate(rs.getString("Date"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return article;
+	}
+	
+	public boolean insert(String title, String contents, String writer) {
+		boolean flag = false;
+		String sql = "INSERT INTO t_board(title, contents, writer, date) VALUES (?, ?, ?, DATE_FORMAT(NOW(), '%Y-%m-%d %h:%i:%s'))";
+		try {
+			conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:myapp");
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, title);
+			pstmt.setString(2, contents);
+			pstmt.setString(3, writer);
+			
+			int result = pstmt.executeUpdate();
+			
+			if ( result > 0 ) {
+				flag = true;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return flag;
+	}
+	
+	public boolean update(int idx, String title, String contents, String writer) {
+		boolean flag = false;
+		String sql = "UPDATE t_board SET title = ?, contents = ? WHERE idx = ? AND writer = ?"; //SET은 ,로구분
+		
+		try {
+			conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:myapp");
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, title);
+			pstmt.setString(2, contents);
+			pstmt.setInt(3, idx);
+			pstmt.setString(4, writer);
+			
+			int result = pstmt.executeUpdate();
+			
+			if ( result > 0 ) {
+				flag = true;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return flag;
+	}
+	
+	public boolean delete(int idx) {
+		boolean flag = false;
+		String sql = "DELETE FROM t_board WHERE idx = ? ";
+		
+		try {
+			conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:myapp");
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, idx);
+			
+			int result = pstmt.executeUpdate();
+			
+			if ( result > 0 ) {
+				flag = true;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return flag;
+	}
+}

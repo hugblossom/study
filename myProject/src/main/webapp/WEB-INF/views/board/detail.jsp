@@ -9,3 +9,9 @@
 
 <a href="/board/modify.do?idx=${article.idx}">수정</a>
 <a href="/board/list.do">목록으로</a>
+<c:if test="${sessionScope.member.id eq article.writer}">
+<form action="/board/delete.do" method="POST">
+	<input type="hidden" name="idx" value="${article.idx}" />
+	<input type="submit" value="삭제">
+</form>
+</c:if>
