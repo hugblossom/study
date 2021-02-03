@@ -1,0 +1,32 @@
+package com.myapp.handler.board;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.myapp.dao.BoardDAO;
+import com.myapp.handler.DefaultHandler;
+import com.myapp.vo.Article;
+
+public class SearchHandler implements DefaultHandler {
+	private String view = "/WEB-INF/views/template.jsp";
+			
+	public String doHandle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+		
+		if ( "GET".equalsIgnoreCase(request.getMethod()) ) {
+			BoardDAO boardDAO = new BoardDAO();
+		}
+		
+		if ( "POST".equalsIgnoreCase(request.getMethod()) ) {
+			
+		}
+		
+		request.setAttribute("uri", "/board/list.do");
+		
+		return view;
+	}
+}

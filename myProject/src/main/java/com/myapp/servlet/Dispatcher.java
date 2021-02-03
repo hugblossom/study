@@ -39,7 +39,7 @@ public class Dispatcher extends HttpServlet {
     	
     	while(iter.hasNext()) {
     		String key = (String) iter.next();
-    		String value = prop.getProperty(key);
+    		String value = prop.getProperty(key); // getProperty() = key의 value를 가져온다
     		
     		try {
     			Class<?> handlerClass = Class.forName(value);

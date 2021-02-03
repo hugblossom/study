@@ -3,6 +3,17 @@
 
 <div>article list</div>
 
+<form action="/board/search.do" method="GET">
+	<select name="type">
+		<option value="W">작성자</option>
+		<option value="T">제목</option>
+		<option value="C">내용</option>
+		<option value="TC">제목+내용</option>
+	</select>
+	<input type="text" name="word" placeholder="검색어">
+	<input type="submit" value="검색">
+</form>
+
 <c:forEach items="${articleList}" var="row" varStatus="status">
 	<p><a href="/board/detail.do?idx=${row.idx}">${status.count + (pageCnt * (pageNum - 1)) } / ${row.title} / ${row.writer} / ${row.date}</a></p>
 </c:forEach>

@@ -42,6 +42,53 @@ public class BoardDAO {
 		return articleList;
 	}
 	
+	public List<Article> getListBySearch(String type, String word) {
+		List<Article> articleList = new ArrayList<Article>();
+		
+		StringBuilder sqlsb = new StringBuilder();
+		String sql = "";
+		sqlsb.append("SELECT idx, title, writer, date FROM t_board ");
+		
+		if ( "W".equals(type) ) {
+			sqlsb.append("WHERE writer LIKE '%" + word + "%'");
+		}
+		
+		if ( "T".equals(type) ) {
+			sqlsb.append("WHERE title LIKE '%" + word + "%'");
+		}
+		
+		if ( "C".equals(type) ) {
+			sqlsb.append("WHERE contents LIKE '%" + word + "%'");
+		}
+		
+		if ( "TC".equals(type) ) {
+			sqlsb.append("WHERE title LIKE '%" + word + "%' OR contents LIKE '%" + word + "%'");
+		}
+		
+		sql = sqlsb.toString();
+				
+		try {
+			conn = DriverManager.getConnection("jdbc:apache:commons:dbcp:myapp");
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while ( rs.next() ) {
+				Article temp = new Article(
+					 rs.getInt("idx"),
+					 rs.getString("title"),
+					 rs.getString("writer"),
+					 rs.getString("date")
+				);
+				
+				articleList.add(temp); //List는 add() Map은 put()
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return articleList;
+	}
+	
 	public List<Article> getListByCondition(int pageNum, int pageCnt) {
 		List<Article> articleList = new ArrayList<Article>();
 		String sql = "SELECT * FROM t_board LIMIT ?, ?";
