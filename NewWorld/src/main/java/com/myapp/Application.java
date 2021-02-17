@@ -21,20 +21,6 @@ public class Application {
 			ResultSet rs = pstmt.executeQuery();
 			rs.next();
 			
-			Member member = new Member(
-				rs.getInt("mem_idx"),
-				rs.getString("mem_id"),
-				rs.getString("mem_nick"),
-				rs.getString("mem_passwd"),
-				rs.getString("mem_email"),
-				rs.getString("mem_st"),
-				rs.getString("mem_auth"),
-				rs.getDate("reg_date"),
-				rs.getDate("mod_date")
-			);
-			
-			System.out.println(member.toString());
-			
 		} catch (Exception e) {
 			
 			e.printStackTrace();

@@ -1,5 +1,7 @@
 package com.myapp.vo;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,20 +29,6 @@ public class Member {
 	private String mem_auth;
 	private Date reg_date;
 	private Date mod_date;
-	
-	public Member(int mem_idx, String mem_id, String mem_nick, String mem_passwd, String mem_email, String mem_st,
-			String mem_auth, Date reg_date, Date mod_date) {
-		super();
-		this.mem_idx = mem_idx;
-		this.mem_id = mem_id;
-		this.mem_nick = mem_nick;
-		this.mem_passwd = mem_passwd;
-		this.mem_email = mem_email;
-		this.mem_st = mem_st;
-		this.mem_auth = mem_auth;
-		this.reg_date = reg_date;
-		this.mod_date = mod_date;
-	}
 	
 	public Notification validateJoin() {
 		Notification noti = new Notification();
@@ -86,6 +74,29 @@ public class Member {
 			noti.put("mem_email", Boolean.FALSE);
 		}
 		
+		return noti;
+	}
+	
+	public Notification validateNull() {
+		Notification noti = new Notification();
+		
+		Field[] fields = this.getClass().getDeclaredFields();
+		
+		for ( Field field : fields ) {
+			
+			try {
+				
+				String key = field.getName();
+				Boolean value = (field.get(this) == Integer.valueOf(0) || field.get(this) == null) ? Boolean.FALSE : Boolean.TRUE;
+				noti.put(key, value);
+				
+			} catch (IllegalAccessException iae) {
+				
+				iae.printStackTrace();
+				
+			}
+		}
+						
 		return noti;
 	}
 	

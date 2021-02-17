@@ -40,5 +40,13 @@ public class MemberTest {
 		Notification noti = member.validateJoin();
 		System.out.println(noti.toString());
 	}
-
+	
+	@Test
+	public void 멤버_널_체크() {
+		Member member = new Member();
+		member.setMem_id("stephy");
+		member.setMem_nick("용신");
+		Notification noti = member.validateNull();
+		System.out.println(noti.toString());
+	}
 }

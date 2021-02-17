@@ -54,16 +54,4 @@ public class MemberJoinService {
 		return flag;
 	}
 	
-	public void delete() {
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/stephy?&useSSL=false", "root", "2002");
-			dao.deleteLast(conn);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
-		}
-		
-	}
 }

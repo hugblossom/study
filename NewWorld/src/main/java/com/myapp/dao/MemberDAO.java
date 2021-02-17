@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.myapp.vo.Member;
 
@@ -31,7 +33,54 @@ public class MemberDAO {
 		int result = pstmt.executeUpdate();
 		
 		return result;
+	}
+	
+	public Member selectById(Connection conn, String mem_id) throws SQLException {
+		String sql = "SELECT * FROM t_member WHERE mem_id = ?";
+		Member member = new Member();
 		
+		pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, mem_id);
+		rs = pstmt.executeQuery();
+		
+		if ( rs.next() ) {
+			member.setMem_idx(rs.getInt("mem_idx"));
+			member.setMem_id(rs.getString("mem_id"));
+			member.setMem_nick(rs.getString("mem_nick"));
+			member.setMem_passwd(rs.getString("mem_passwd"));
+			member.setMem_email(rs.getString("mem_email"));
+			member.setMem_st(rs.getString("mem_st"));
+			member.setMem_auth(rs.getString("mem_auth"));
+			member.setReg_date(rs.getDate("reg_date"));
+			member.setMod_date(rs.getDate("mod_date"));
+		}
+		
+		return member;
+	}
+	
+	public List<Member> selectList(Connection conn) throws SQLException {
+		List<Member> memberList = new ArrayList<>();
+		String sql = "SELECT * FROM t_member";
+		
+		pstmt = conn.prepareStatement(sql);
+		rs = pstmt.executeQuery();
+		
+		while( rs.next() ) {
+			Member temp = new Member();
+			temp.setMem_idx(rs.getInt("mem_idx"));
+			temp.setMem_id(rs.getString("mem_id"));
+			temp.setMem_nick(rs.getString("mem_nick"));
+			temp.setMem_passwd(rs.getString("mem_passwd"));
+			temp.setMem_email(rs.getString("mem_email"));
+			temp.setMem_st(rs.getString("mem_st"));
+			temp.setMem_auth(rs.getString("mem_auth"));
+			temp.setReg_date(rs.getDate("reg_date"));
+			temp.setMod_date(rs.getDate("mod_date"));
+			
+			memberList.add(temp);
+		}
+			
+		return memberList;
 	}
 	
 	public void deleteLast(Connection conn) throws SQLException {

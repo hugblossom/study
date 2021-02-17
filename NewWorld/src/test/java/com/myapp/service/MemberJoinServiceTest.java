@@ -40,8 +40,7 @@ public class MemberJoinServiceTest {
 
 	@After // 테스트 직후에 실행
 	public void tearDown() throws Exception {
-		MemberJoinService mjs = new MemberJoinService();
-		mjs.delete();
+	
 	}
 
 	@AfterClass // 가장 마지막 실행
