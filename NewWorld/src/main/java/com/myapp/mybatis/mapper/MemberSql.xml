@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myapp.mybatis.mapper.MemberImpl">
+
+	<insert id="inert" parameterType="Member">
+	
+		<selectKey keyColumn="mem_idx" keyProperty="mem_key" resultType="Integer" order="AFTER">
+			SELECT LAST_INSERT_ID() AS mem_idx
+		</selectKey>
+		
+		INSERT INTO
+			t_member (
+				mem_id
+				, mem_nick
+				, mem_passwd
+				, mem_email
+			) VALUES (
+				#{mem_id}
+				, #{mem_nick}
+				, #{mem_passwd}
+				, #{mem_email}
+			)
+	</insert>
+
+	<select id="selectCount" resultType="Integer"><!-- 데이터 없을때 null 리턴시 받기위해 integer 설정 -->
+		SELECT COUNT(*) FROM t_member
+	</select>
+
+	<select id="selectById" parameterType="String" resultType="Member">
+		SELECT * FROM t_member WHERE mem_id = #{mem_id}
+	</select>
+	
+	<select id="selectByIdAndPasswd" parameterType="Member" resultType="Member">
+		SELECT * FROM t_member WHERE mem_id = #{mem_id} AND mem_passwd =#{mem_passwd}
+	</select>
+	
+	<select id="selectList" resultType="hashmap">
+		SELECT * FROM t_member
+	</select>
+	
+	<update id="update" parameterType="Member">
+		<selectKey keyColumn="mem_idx" keyProperty="mem_key" resultType="Integer" order="AFTER">
+			SELECT mem_idx FROM t_member WHERE mem_id = #{mem_id}
+		</selectKey>
+		
+		UPDATE t_member
+		
+		<set>
+			<if test="mem_nick != null">
+				mem_nick = ${mem_nick},
+			</if>
+			<if test="mem_passwd != null">
+				mem_passwd = ${mem_passwd},
+			</if>
+			<if test="mem_email != null">
+				mem_email = ${mem_email},
+			</if>
+		</set>
+		
+		WHERE
+			mem_id = #{mem_id}
+	</update>
+	
+	<update id="updateAuthByIdx" parameterType="Member">
+		UPDATE t_member SET mem_auth = #{mem_auth} WHERE mem_idx = #{mem_idx}
+	</update>
+	
+	<update id="deleteByIdx" parameterType="int">
+		UPDATE t_member SET mem_st = '0' WHERE mem_idx = #{mem_idx}
+	</update>
+	
+</mapper>

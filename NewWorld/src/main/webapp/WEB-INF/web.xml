@@ -60,10 +60,32 @@
 		</init-param>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>SqlSessionManager</display-name>
+		<servlet-name>SqlSessionManager</servlet-name>
+		<servlet-class>com.myapp.servlet.SqlSessionManager</servlet-class>
+	</servlet>
+	<servlet>
+		<description>
+		</description>
+		<display-name>DispatcherServlet</display-name>
+		<servlet-name>DispatcherServlet</servlet-name>
+		<servlet-class>com.myapp.servlet.DispatcherServlet</servlet-class>
+	</servlet>
 	
 	<servlet-mapping>
 		<servlet-name>Dispatcher</servlet-name>
 		<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>SqlSessionManager</servlet-name>
+		<url-pattern>/SqlSessionManager</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>DispatcherServlet</servlet-name>
+		<url-pattern>/DispatcherServlet</url-pattern>
 	</servlet-mapping>
 	
 	<error-page>

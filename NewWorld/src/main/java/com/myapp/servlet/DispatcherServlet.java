@@ -10,18 +10,20 @@ import java.util.Properties;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.myapp.handler.DefaultHandler;
 
-public class Dispatcher extends HttpServlet {
+@WebServlet(urlPatterns = {"/main/*", "/member/*", "/board/*"}, loadOnStartup = 2)
+public class DispatcherServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	String encoding = "";
 	private Map<String, DefaultHandler> handlerMap = new HashMap<>();
        
-    public Dispatcher() { super(); }
+    public DispatcherServlet() { super(); }
     
     public void init(ServletConfig config) throws ServletException {
     	encoding = config.getInitParameter("encoding");
