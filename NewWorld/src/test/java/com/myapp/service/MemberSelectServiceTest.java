@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.myapp.vo.Member;
+import com.myapp.domain.Member;
 
 public class MemberSelectServiceTest {
 	MemberSelectService service = new MemberSelectService();
@@ -33,39 +33,20 @@ public class MemberSelectServiceTest {
 	}
 
 	@Test
-	public void 멤버_조회() {
-		try {
-			Member member = service.getMember("yong");
-			
-			if ( member.getMem_idx() == 0 ) {
-				throw new RuntimeException();
-			}
-			
-			System.out.println(member.toString());
-			
-		} catch (Exception e) {
-			System.out.println("해당 회원은 존재하지 않습니다.");
-		}
+	public void 멤버_수_조회() throws Exception {
+		System.out.println("member count is " + service.getCount() );
 	}
 	
 	@Test
-	public void 멤버_리스트_조회() {
-		try {
-			List<Member> memberList = service.getMemberList();
-			
-			if (memberList.size() <= 0) {
-			
-				throw new RuntimeException();
-				
-			}
-			
-			for ( Member m : memberList) {
-				System.out.println(m.toString());
-			}
-			
-		} catch (Exception e) {
-			System.out.println("회원이 존재하지 않습니다.");
+	public void 멤버_조회() throws Exception {
+		System.out.println(
+			"멤버 조회: " + service.getMember("stephy").toString()
+		);
+		
+		List<Member> memberList = service.getMemberList();
+		
+		for ( Member member : memberList) {
+			System.out.println("mem_id: " + member.getMem_id());
 		}
 	}
-
 }

@@ -20,16 +20,14 @@ import com.myapp.handler.DefaultHandler;
 @WebServlet(urlPatterns = {"/main/*", "/member/*", "/board/*"}, loadOnStartup = 2)
 public class DispatcherServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	String encoding = "";
+	String encoding = "UTF-8";
 	private Map<String, DefaultHandler> handlerMap = new HashMap<>();
        
     public DispatcherServlet() { super(); }
     
     public void init(ServletConfig config) throws ServletException {
-    	encoding = config.getInitParameter("encoding");
-    	String handlerConfig = config.getInitParameter("handlerProperties");
     	Properties prop = new Properties();
-    	String configPath = config.getServletContext().getRealPath(handlerConfig);
+    	String configPath = config.getServletContext().getRealPath("/WEB-INF/handler.properties");
     	
     	try (FileReader fr = new FileReader(configPath)) {
     		prop.load(fr);
@@ -68,12 +66,14 @@ public class DispatcherServlet extends HttpServlet {
 		String path = request.getContextPath();
 		String key = uri.substring(path.length() + 1);
 		String view = null;
+		String preFix = "/WEB-INF/views/";
+		String sufFix = ".jsp";
 		
 		DefaultHandler handler = handlerMap.get(key);
 		
 		try {
 			if (handler == null) {
-				handler = handlerMap.get("404.do");
+				handler = handlerMap.get("error/404");
 				view = handler.doHandle(request, response);
 			}
 			view = handler.doHandle(request, response);
@@ -81,7 +81,7 @@ public class DispatcherServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		RequestDispatcher dsp = request.getRequestDispatcher(view);
+		RequestDispatcher dsp = request.getRequestDispatcher(preFix + view + sufFix);
 		dsp.forward(request, response);
 	} 
 }

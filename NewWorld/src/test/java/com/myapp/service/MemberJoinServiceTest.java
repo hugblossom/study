@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.myapp.dao.MemberDAO;
+import com.myapp.dao._MemberDAO;
 import com.myapp.vo.Member;
 
 public class MemberJoinServiceTest {

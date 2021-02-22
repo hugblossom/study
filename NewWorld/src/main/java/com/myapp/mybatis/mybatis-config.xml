@@ -24,4 +24,9 @@
 			</dataSource>
 		</environment>
 	</environments>
+	
+	<mappers>
+		<mapper resource="com/myapp/mybatis/mapper/MemberSql.xml" />
+	</mappers>
+	
 </configuration>

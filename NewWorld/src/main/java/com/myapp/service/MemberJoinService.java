@@ -4,14 +4,14 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import com.myapp.dao.MemberDAO;
+import com.myapp.dao._MemberDAO;
 import com.myapp.exception.MemberJoinFailedException;
 import com.myapp.util.JDBCUtil;
 import com.myapp.vo.Member;
 
 public class MemberJoinService {
 	Connection conn	= null;
-	MemberDAO dao	= new MemberDAO();
+	_MemberDAO dao	= new _MemberDAO();
 	
 	public boolean join(Member member) {
 		boolean flag = false;

@@ -24,7 +24,7 @@
 	</insert>
 
 	<select id="selectCount" resultType="Integer"><!-- 데이터 없을때 null 리턴시 받기위해 integer 설정 -->
-		SELECT COUNT(*) FROM t_member
+		SELECT COUNT(*) AS cnt FROM t_member
 	</select>
 
 	<select id="selectById" parameterType="String" resultType="Member">
@@ -35,7 +35,7 @@
 		SELECT * FROM t_member WHERE mem_id = #{mem_id} AND mem_passwd =#{mem_passwd}
 	</select>
 	
-	<select id="selectList" resultType="hashmap">
+	<select id="selectList" resultType="Member">
 		SELECT * FROM t_member
 	</select>
 	
