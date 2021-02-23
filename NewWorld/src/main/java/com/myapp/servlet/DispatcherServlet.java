@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.myapp.handler.DefaultHandler;
 
-@WebServlet(urlPatterns = {"/main/*", "/member/*", "/board/*"}, loadOnStartup = 2)
+@WebServlet(urlPatterns = {"/main/*", "/member/*", "/board/*", "/error/*"}, loadOnStartup = 2)
 public class DispatcherServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	String encoding = "UTF-8";

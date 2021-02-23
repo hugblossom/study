@@ -7,6 +7,7 @@ import com.myapp.domain.Member;
 public interface MemberImpl {
 	public int insert(Member member);
 	public int selectCount();
+	public Member selectByIdx(int mem_idx);
 	public Member selectById(String mem_id);
 	public Member selectByIdAndPasswd(Member member);
 	public List<Member> selectList();

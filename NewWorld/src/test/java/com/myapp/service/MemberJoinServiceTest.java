@@ -30,7 +30,7 @@ public class MemberJoinServiceTest {
 		member.setMem_passwd("testtttt");
 		member.setMem_email("testtttt@naver.com");
 		
-		MemberJoinService mjs = new MemberJoinService();
+		_MemberJoinService mjs = new _MemberJoinService();
 		boolean flag = mjs.join(member);
 		
 		Assert.assertTrue(flag);

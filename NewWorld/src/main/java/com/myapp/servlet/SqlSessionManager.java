@@ -13,7 +13,6 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-@WebServlet(loadOnStartup = 1)
 public class SqlSessionManager extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static SqlSessionFactory factory;

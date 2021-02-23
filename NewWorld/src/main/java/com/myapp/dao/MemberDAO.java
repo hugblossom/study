@@ -17,6 +17,10 @@ public class MemberDAO {
 		return session.getMapper(MemberImpl.class).selectById(mem_id);
 	}
 	
+	public Member getMemberByIdx(SqlSession session, int mem_idx) throws SQLException {
+		return session.getMapper(MemberImpl.class).selectByIdx(mem_idx);
+	}
+	
 	public List<Member> getMemberList(SqlSession session) throws SQLException {
 		return session.getMapper(MemberImpl.class).selectList();
 	}

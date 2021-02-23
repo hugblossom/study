@@ -6,6 +6,8 @@
 <title>index</title>
 </head>
 <body>
-	index
+	<script type="text/javascript">
+		location.href="/main";
+	</script>
 </body>
 </html>

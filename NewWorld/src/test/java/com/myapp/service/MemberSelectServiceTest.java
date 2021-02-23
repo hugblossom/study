@@ -14,7 +14,7 @@ import org.junit.Test;
 import com.myapp.domain.Member;
 
 public class MemberSelectServiceTest {
-	MemberSelectService service = new MemberSelectService();
+	MemberService service = new MemberService();
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

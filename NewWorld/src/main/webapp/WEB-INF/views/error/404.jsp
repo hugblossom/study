@@ -7,8 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-	main page
-	
-	
+	[404] Error
 </body>
 </html>
