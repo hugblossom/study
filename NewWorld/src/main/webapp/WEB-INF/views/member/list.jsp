@@ -15,5 +15,13 @@
 		</li>
 	</c:forEach>
 	</ul>
+	
+	<div>
+		멤버번호 : <input tyoe="text" name="mem_idx" value="" /><input type="button" value="검색" id="getMemberBtn">
+		<br>
+		<button id="getMemberListBtn" type="button">멤버 리스트 가져오기</button>
+	</div>
+	
+	<script src="/static/js/MemberManipulator.js"></script>
 </body>
 </html>

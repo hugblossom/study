@@ -24,4 +24,8 @@ public class MemberDAO {
 	public List<Member> getMemberList(SqlSession session) throws SQLException {
 		return session.getMapper(MemberImpl.class).selectList();
 	}
+	
+	public int setMember(SqlSession session, Member member) throws SQLException {
+		return session.getMapper(MemberImpl.class).update(member);
+	}
 }

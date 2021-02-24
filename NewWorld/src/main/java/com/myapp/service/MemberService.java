@@ -53,4 +53,19 @@ public class MemberService {
 		}
 	}
 	
+	public int setMember(Member member) throws SQLException {
+		int result = 0;
+		SqlSession session = factory.openSession();
+		
+		try {
+			result = dao.setMember(session, member);
+		} catch( Exception e ) {
+			throw new RuntimeException(e);
+		} finally {
+			session.close();
+		}
+		
+		return result;
+	}
+	
 }
