@@ -13,7 +13,7 @@ public class MemberDAO {
 		return session.getMapper(MemberImpl.class).selectCount();
 	}
 	
-	public Member getMember(SqlSession session, String mem_id) throws SQLException {
+	public Member selectById(SqlSession session, String mem_id) throws SQLException {
 		return session.getMapper(MemberImpl.class).selectById(mem_id);
 	}
 	
@@ -26,6 +26,10 @@ public class MemberDAO {
 	}
 	
 	public int setMember(SqlSession session, Member member) throws SQLException {
+		return session.getMapper(MemberImpl.class).update(member);
+	}
+	
+	public int update(SqlSession session, Member member) throws SQLException {
 		return session.getMapper(MemberImpl.class).update(member);
 	}
 }

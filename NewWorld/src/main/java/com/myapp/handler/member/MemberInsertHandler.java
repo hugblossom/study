@@ -8,21 +8,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.myapp.domain.Member;
 import com.myapp.handler.DefaultHandler;
 import com.myapp.service.MemberService;
+import com.myapp.domain.Member;
 
-public class MemberDetailHandler implements DefaultHandler { // NullHandler라고도 함
-	String view = "member/detail";
+public class MemberInsertHandler implements DefaultHandler { // NullHandler라고도 함
+	String view = "member/insert";
 	
 	public String doHandle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
-		String mem_id = request.getParameter("mem_id");
-		MemberService service = new MemberService();
-		
-		Member member = service.selectById(mem_id);
-		
-		request.setAttribute("member", member);
-	
+
 		return view;
 	}
 }

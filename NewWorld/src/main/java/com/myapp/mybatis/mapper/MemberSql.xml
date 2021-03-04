@@ -3,7 +3,7 @@
 
 <mapper namespace="com.myapp.mybatis.mapper.MemberImpl">
 
-	<insert id="inert" parameterType="Member">
+	<insert id="insert" parameterType="Member">
 	
 		<selectKey keyColumn="mem_idx" keyProperty="mem_key" resultType="Integer" order="AFTER">
 			SELECT LAST_INSERT_ID() AS mem_idx
@@ -44,26 +44,18 @@
 	</select>
 	
 	<update id="update" parameterType="Member">
-		<selectKey keyColumn="mem_idx" keyProperty="mem_key" resultType="Integer" order="AFTER">
-			SELECT mem_idx FROM t_member WHERE mem_id = #{mem_id}
-		</selectKey>
-		
-		UPDATE t_member
-		
+		UPDATE
+			t_member
+			
 		<set>
-			<if test="mem_nick != null">
-				mem_nick = ${mem_nick},
-			</if>
-			<if test="mem_passwd != null">
-				mem_passwd = ${mem_passwd},
-			</if>
-			<if test="mem_email != null">
-				mem_email = ${mem_email},
-			</if>
+			<if test="mem_nick != null and !mem_nick.equals('')">mem_nick = #{mem_nick},</if>
+			<if test="mem_passwd != null and !mem_passwd.equals('')">mem_passwd = #{mem_passwd},</if>
+			<if test="mem_email != null and !mem_email.equals('')">mem_email = #{mem_email},</if>
 		</set>
 		
 		WHERE
-			mem_id = #{mem_id}
+			mem_idx = #{mem_idx}
+			AND mem_id = #{mem_id}		
 	</update>
 	
 	<update id="updateAuthByIdx" parameterType="Member">

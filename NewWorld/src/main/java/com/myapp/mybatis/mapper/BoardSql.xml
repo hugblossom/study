@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myapp.mybatis.mapper.BoardImpl">
+
+	<insert id="insert" parameterType="Article">
+	
+		<selectKey keyColumn="art_idx" keyProperty="art_idx" resultType="Integer" order="AFTER">
+			SELECT LAST_INSERT_ID() AS art_idx
+		</selectKey>
+		
+		INSERT INTO
+			t_board (
+				art_kind
+				, art_title
+				, art_content
+				, mem_id
+				, art_good
+				, art_bad
+				, art_st
+				, art_passwd
+				, red_date
+				, mod_date
+			) VALUES (
+				#{art_kind}
+				, #{art_title}
+				, #{art_content}
+				, #{mem_id}
+				, 0
+				, 0
+				, 1
+				, #{art_passwd}
+				, NOW()
+				, NOW()
+			)
+	</insert>
+
+	<select id="selectCount" resultType="Integer"><!-- 데이터 없을때 null 리턴시 받기위해 integer 설정 -->
+		SELECT COUNT(*) AS cnt FROM t_board
+	</select>
+	
+	<select id="selectByIdx" parameterType="int" resultType="Article">
+		SELECT * FROM t_board WHERE mem_idx = #{mem_idx}
+	</select>
+
+	<select id="selectById" parameterType="String" resultType="Article">
+		SELECT * FROM t_board WHERE mem_id = #{mem_id}
+	</select>
+	
+	<select id="selectAll" resultType="Article">
+		SELECT * FROM t_board
+	</select>
+	
+</mapper>

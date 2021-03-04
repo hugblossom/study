@@ -20,6 +20,7 @@ import org.json.simple.parser.JSONParser;
 
 import com.myapp.domain.Member;
 import com.myapp.service.MemberService;
+import com.myapp.util.MyappUtil;
 
 @WebServlet("/api/v1/members/*")
 public class MemberApiServlet extends HttpServlet {
@@ -98,60 +99,27 @@ public class MemberApiServlet extends HttpServlet {
 	}
 	
 	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String uri = request.getRequestURI();
-		String path = request.getContextPath();
-		String key =  uri.substring(path.length() + "/api/v1/".length());
-		String mem_idx = key.split("/")[1];
 		PrintWriter out = response.getWriter();
 		int result = 0;
 		MemberService service = new MemberService();
 		
 		try {
 			
-			BufferedReader reader;
-			StringBuilder sb = new StringBuilder();
-			InputStream is = request.getInputStream();
-			
-			if ( is != null ) {
-				reader = new BufferedReader(new InputStreamReader(is));
-				char[] charBuffer = new char[128];
-				int read = -1;
-				
-				while ( (read = reader.read(charBuffer)) > 0 ) {
-					sb.append(charBuffer, 0 ,read);
-				}
-			}
-			
-			String data = sb.toString();
-			
-			JSONParser parser = new JSONParser();
-			JSONObject jObj = (JSONObject) parser.parse(data);
-			
-			String mem_id = "";
-			String mem_nick = "";
-			String mem_email = "";
-			String mem_passwd = "";
+			JSONObject jObj = MyappUtil.requestToJson(request);
+			int mem_idx = Integer.valueOf((String) jObj.get("mem_idx"));
+			String mem_id = (String) jObj.get("mem_id");
+			String mem_nick = (String) jObj.get("mem_nick");
+			String mem_passwd = (String) jObj.get("mem_passwd");
+			String mem_email = (String) jObj.get("mem_email");
 			
 			Member member = new Member();
+			member.setMem_idx(mem_idx);
+			member.setMem_id(mem_id);
+			member.setMem_nick(mem_nick);
+			member.setMem_passwd(mem_passwd);
+			member.setMem_email(mem_email);
 			
-			if ( jObj.get("mem_id") != null ) {
-				mem_id = (String) jObj.get("mem_id");
-				member.setMem_id(mem_id);
-			}
-			if ( jObj.get("mem_nick") != null ) {
-				mem_nick = (String) jObj.get("mem_nick");
-				member.setMem_nick(mem_nick);
-			}
-			if ( jObj.get("mem_email") != null ) {
-				mem_email = (String) jObj.get("mem_email");
-				member.setMem_email(mem_email);
-			}
-			if ( jObj.get("mem_passwd") != null ) {
-				mem_passwd = (String) jObj.get("mem_passwd");
-				member.setMem_passwd(mem_passwd);
-			}
-			
-			result = service.setMember(member);
+			result = service.update(member);
 			
 		} catch ( Exception e ) {
 			
@@ -163,5 +131,6 @@ public class MemberApiServlet extends HttpServlet {
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
+	
 
 }

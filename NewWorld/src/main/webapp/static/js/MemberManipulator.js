@@ -27,6 +27,14 @@ const MemberManipulator = {
 				event.preventDefault();
 				_this.update();
 			});
+		}
+		
+		var idCheckBtn = document.querySelector("#idCheckBtn");
+		if ( idCheckBtn ) {
+			idCheckBtn.addEventListener("click", function() {
+				event.preventDefault();
+				_this.idCheck();
+			})
 		} 
 	},
 	select: function() {
@@ -114,6 +122,37 @@ const MemberManipulator = {
 					alert(xhr.responseText);
 				} else {
 					alert("회원정보 조회 실패 + 번호:" + mem_idx);
+				}
+			}
+		}
+	},
+	idCheck: function() {
+		var xhr = new XMLHttpRequest();
+		var mem_id = document.querySelector("input[name=mem_id]").value;
+		
+		var data = {
+			"mem_id" : mem_id
+		}
+		
+		if ( !xhr ) {
+			alert("XMLHttpRequest instantiation exception");
+			return false;
+		}
+				
+		xhr.open("GET", "/api/v1/check/idDuplicationCheck?id=" + mem_id);
+		xhr.setRequestHeader("Content-Type","x-www-form-urlencoded");
+		xhr.send();
+		
+		xhr.onreadystatechange = function() {
+			if( xhr.readyState === XMLHttpRequest.DONE ) {
+				if ( xhr.status === 200  || xhr.status === 201 ) {
+					if ( xhr.responseText == "true" ) {
+						alert("사용 가능한 아이디입니다");
+					} else {
+						alert("이미 사용중인 아이디입니다");
+					}
+				} else {
+					alert("잠시 후에 다시 시도해 주세요");
 				}
 			}
 		}

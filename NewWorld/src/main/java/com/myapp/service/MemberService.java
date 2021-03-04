@@ -32,10 +32,10 @@ public class MemberService {
 		return result;
 	}
 	
-	public Member getMember(String mem_id) throws SQLException {
+	public Member selectById(String mem_id) throws SQLException {
 		
 		try ( SqlSession session = factory.openSession()) {
-			return dao.getMember(session, mem_id);
+			return dao.selectById(session, mem_id);
 		}
 	}
 	
@@ -60,6 +60,25 @@ public class MemberService {
 		try {
 			result = dao.setMember(session, member);
 		} catch( Exception e ) {
+			throw new RuntimeException(e);
+		} finally {
+			session.close();
+		}
+		
+		return result;
+	}
+	
+	public int update(Member member) throws Exception {
+		
+		int result = 0;
+		
+		SqlSession session = factory.openSession();
+		
+		try {
+			result = dao.update(session, member);
+			session.commit();
+		} catch ( Exception e ) {
+			session.rollback();
 			throw new RuntimeException(e);
 		} finally {
 			session.close();

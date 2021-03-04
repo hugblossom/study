@@ -13,7 +13,7 @@
 		패스워드 : <input type="text" name="mem_passwd"><br>
 		이메일 : <input type="text" name="mem_email">
 	</div>
-	<button id="memberModifyBtn"></button>
+	<button id="memberModifyBtn">변경</button>
 	
 	<script src="/static/js/MemberManipulator.js"></script>
 </body>
