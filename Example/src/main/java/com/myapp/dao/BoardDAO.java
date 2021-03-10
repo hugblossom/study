@@ -27,7 +27,7 @@ public class BoardDAO {
 		List<Article> list = new ArrayList<>();
 		
 		try {
-			String sql = "SELECT * FROM t_board";
+			String sql = "SELECT * FROM t_board WHERE st = '1'";
 
 			conn = getConnection();
 			pstmt = conn.prepareStatement(sql);
@@ -72,7 +72,7 @@ public class BoardDAO {
 	
 	public Article selectByUid(String uid) {
 		Article result = null;
-		String sql = "SELECT * FROM t_board WHERE uid = ?";
+		String sql = "SELECT * FROM t_board WHERE uid = ? AND st = '1'";
 		
 		try {
 			conn = getConnection();
@@ -134,6 +134,114 @@ public class BoardDAO {
 			
 			result = pstmt.executeUpdate();
 		
+		} catch ( Exception e ) {
+			
+		} finally {
+			try {
+				conn.close();
+				pstmt.close();
+				rs.close();
+			} catch ( Exception e ) {
+				
+			}
+		}
+		
+		return result;
+	}
+	
+	public int update(Article article) {
+		int result = 0;
+		String sql = "UPDATE t_board SET title = ?, content = ? WHERE uid = ?";
+		
+		try {
+			conn = getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, article.getTitle());
+			pstmt.setString(2, article.getContent());
+			pstmt.setInt(3, article.getUid());
+			result = pstmt.executeUpdate();
+			
+		} catch ( Exception e ) {
+			
+		} finally {
+			try {
+				conn.close();
+				pstmt.close();
+				rs.close();
+			} catch ( Exception e ) {
+				
+			}
+		}
+		
+		return result;
+	}
+	
+	public int updateGood(int uid) {
+		int result = 0;
+		String sql = "UPDATE t_board SET good = (good + 1) WHERE uid = ?";
+		
+		try {
+			conn = getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, uid);
+			result = pstmt.executeUpdate();
+			
+		} catch ( Exception e ) {
+			
+		} finally {
+			try {
+				conn.close();
+				pstmt.close();
+				rs.close();
+			} catch ( Exception e ) {
+				
+			}
+		}
+		
+		return result;
+	}
+	
+	public int updateGoodBad(String mod, int uid) {
+		int result = 0;
+		String sql = "";
+		
+		if ("good".equalsIgnoreCase(mod)) {
+			sql = "UPDATE t_board SET good = (good + 1) WHERE uid = ?";
+		} else {
+			sql = "UPDATE t_board SET bad = (bad + 1) WHERE uid = ?";
+		}
+		
+		try {
+			conn = getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, uid);
+			result = pstmt.executeUpdate();
+			
+		} catch ( Exception e ) {
+			
+		} finally {
+			try {
+				conn.close();
+				pstmt.close();
+				rs.close();
+			} catch ( Exception e ) {
+				
+			}
+		}
+		
+		return result;
+	}
+	
+	public int delete(int uid) {
+		int result = 0;
+		String sql = "UPDATE t_board SET st = 0 WHERE uid = ?";
+		
+		try {
+			conn = getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, uid);
+			result = pstmt.executeUpdate();
+			
 		} catch ( Exception e ) {
 			
 		} finally {

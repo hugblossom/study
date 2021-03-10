@@ -11,10 +11,12 @@
 	<ul>
 	<c:forEach items="${articleList}" var="row" varStatus="status">
 		<li>
-			<a href="/board/detail?uid=${row.uid}"> ${row.uid}  / ${row.title} / ${row.memId} / ${row.regDate}</a>
+			<a href="/board/detail?uid=${row.uid}"> ${row.uid}  / ${row.title}[추천${row.good}/비추천${row.bad}] / ${row.memId} / ${row.regDate}</a>
 		</li>
 	</c:forEach>
 	</ul>
+
+	<a href="/board/insert">글쓰기</a> 
 	
 	<script>
 		function getResult() {
