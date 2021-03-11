@@ -7,6 +7,17 @@
 	version="3.1">
 	
 	<display-name>Example</display-name>
+	<servlet>
+		<description>
+		</description>
+		<display-name>MemberLoginServlet</display-name>
+		<servlet-name>MemberLoginServlet</servlet-name>
+		<servlet-class>com.myapp.servlet.MemberLoginServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>MemberLoginServlet</servlet-name>
+		<url-pattern>/MemberLoginServlet</url-pattern>
+	</servlet-mapping>
 
 	<!-- <filter>
 		<filter-name>CharacterEncodingFilter</filter-name>
