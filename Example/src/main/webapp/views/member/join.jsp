@@ -22,7 +22,7 @@
 		function joinCheck() {
 			var result = "${result}";
 			var msg = "";
-			var loca = "/main";
+			var loca = "";
 			
 			if ( result == "0000" ) {
 				msg = "가입에 상공하였습니다.\n로그인 페이지로 이동합니다";
@@ -37,9 +37,14 @@
 				msg = "올바르지 않은 접근입니다.";
 				loca = "/main";
 			}
-			alert(msg);
-			location.href = loca;
+			
+			if ( result ) {
+				alert(msg);
+				location.href = loca;
+			}
+			
 		}
+		joinCheck();
 	</script>
 </body>
 </html>

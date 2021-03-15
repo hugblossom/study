@@ -119,17 +119,15 @@ public class MemberDAO {
 	}
 	
 	public int insert(Connection conn, Member member) throws SQLException {
-		
-		int result = 0;
-		PreparedStatement pstmt = null;
-		String sql = "INSERT INTO t_member(id, nick, passwd, email, reg_date, mod_date) VALUES(?, ?, ?, ?, NOW(), NOW())";
+		PreparedStatement pstmt   = null;
+		int result            = 0;
+		String sql            = "INSERT INTO t_member(id, nick, passwd, email, reg_date, mod_date) VALUES(?, ?, ?, ?, NOW(), NOW())";
 		
 		pstmt = conn.prepareStatement(sql);
 		pstmt.setString(1, member.getId());
 		pstmt.setString(2, member.getNick());
 		pstmt.setString(3, member.getPasswd());
 		pstmt.setString(4, member.getEmail());
-		
 		result = pstmt.executeUpdate();
 		
 		return result;
@@ -151,13 +149,24 @@ public class MemberDAO {
 	}
 	
 	public int addon(Connection conn, Member member) throws SQLException {
+		PreparedStatement pstmt   = null;
+		ResultSet rs = null;
+		int uid = 0;
 		int result = 0;
-		PreparedStatement pstmt = null;
-		String sql = "INSERT INTO t_member_addon(id, uid) VALUES(?, ?)";
-		
+		String sql = "SELECT LAST_INSERT_ID() AS uid"; //LAST_INSERT_ID() 마지막으로 insert된 auto increment된 값
 		pstmt = conn.prepareStatement(sql);
-		result = pstmt.executeUpdate();
+		rs = pstmt.executeQuery();
+		rs.next();
+		uid = rs.getInt("uid");
 		
+		if ( uid >= 1 ) {
+			sql = "INSERT INTO t_member_addon(uid, id) VALUES(?, ?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, uid);
+			pstmt.setString(2, member.getId());
+			result = pstmt.executeUpdate();
+		}
+				
 		return result;
 	}
 	
