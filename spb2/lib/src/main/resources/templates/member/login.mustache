@@ -1,0 +1,11 @@
+{{>layout/header}} <!--  import 된다 -->
+
+<h1>member login page</h1>
+
+<form action="/member/join" method="POST">
+	아이디: <input type="text" name="mem_id"><br>
+	패스워드: <input type="text" name="mem_passwd"><br>
+	<input type="submit" value="로그인">
+</form>
+
+{{>layout/footer}}

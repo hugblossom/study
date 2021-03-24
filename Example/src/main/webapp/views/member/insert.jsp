@@ -7,7 +7,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-	Member insert
+	<h1>member insert</h1>
+	<jsp:include page="/views/layout/nav.jsp"></jsp:include>
 	
 	<form action="" method="POST">
 		아이디 <input type="text" name="mem_id"> <button id="idCheckBtn">중복확인</button><br>

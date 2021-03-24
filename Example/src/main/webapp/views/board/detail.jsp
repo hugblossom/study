@@ -7,6 +7,8 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<h1>board detail</h1>
+	<jsp:include page="/views/layout/nav.jsp"></jsp:include>
 	
 	${article.uid} <br> ${article.title} <br> ${article.content} <br> ${article.memId} <br> ${article.regDate}
 	

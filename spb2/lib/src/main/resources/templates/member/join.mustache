@@ -1,0 +1,15 @@
+{{>layout/header}} <!--  import 된다 -->
+
+<h1>member join page</h1>
+
+<form action="/member/join" method="POST">
+	아이디: <input type="text" name="mem_id"><br>
+	패스워드: <input type="text" name="mem_passwd"><br>
+	패스워드확인: <input type="text" name="mem_passwd_cf"><br>
+	
+	닉네임: <input type="text" name="mem_nick"><br>
+	이메일: <input type="text" name="mem_email"><br>
+	<input type="submit" value="가입">
+</form>
+
+{{>layout/footer}}

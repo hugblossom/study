@@ -9,6 +9,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.myapp.dao.BoardDAO;
 import com.myapp.vo.Article;
@@ -25,15 +28,21 @@ public class BoardInsertServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		String id = (String) session.getAttribute("session_mem_id");
+		
+		if ( StringUtils.isEmpty(id) ) {
+			response.sendRedirect("/main");
+		}
 		
 		String title = request.getParameter("title");
 		String content = request.getParameter("content");
 		Article article = Article
 				.builder()
 				.kind("A")
+				.memId(id)
 				.title(title)
 				.content(content)
-				.memId("stephy")
 				.build();
 		BoardDAO dao = new BoardDAO();
 		int result = dao.insert(article);

@@ -7,6 +7,8 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<h1>board insert</h1>
+	<jsp:include page="/views/layout/nav.jsp"></jsp:include>
 	
 	<form action="/board/insert" method="POST">
 		제목:<input type="text" name="title" placeholder="제목"><br>

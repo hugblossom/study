@@ -7,6 +7,8 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<h1>board update</h1>
+	<jsp:include page="/views/layout/nav.jsp"></jsp:include>
 	
 	글 수정
 	

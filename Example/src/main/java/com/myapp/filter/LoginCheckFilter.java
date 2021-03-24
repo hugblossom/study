@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 
-@WebFilter(urlPatterns = {"/board/delete", "/board/goodbad", "info/*", "/board/insert", "/board/update", "/member/join"})
+//@WebFilter(urlPatterns = {"/board/delete", "/board/goodbad", "/board/insert", "/board/update", "/member/join", "/member/insert",  "/member/login"})
 public class LoginCheckFilter implements Filter {
 
     public LoginCheckFilter() {
@@ -30,14 +30,16 @@ public class LoginCheckFilter implements Filter {
 		
 		String mem_id = (String) session.getAttribute("session_mem_id");
 		
-		if ( StringUtils.isEmpty(mem_id) ) {
+		if ( !StringUtils.isEmpty(mem_id) ) {
 			session.invalidate();
 			
 			HttpServletResponse res = (HttpServletResponse) response;
 			res.sendRedirect("/main");
+		} else {
+			chain.doFilter(request, response);
 		}
 
-		chain.doFilter(request, response);
+		
 	}
 
 	public void init(FilterConfig fConfig) throws ServletException {

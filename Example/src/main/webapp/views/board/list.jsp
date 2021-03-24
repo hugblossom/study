@@ -7,7 +7,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-	Board list
+	<h1>board list</h1>
+	<jsp:include page="/views/layout/nav.jsp"></jsp:include>
 	<ul>
 	<c:forEach items="${articleList}" var="row" varStatus="status">
 		<li>

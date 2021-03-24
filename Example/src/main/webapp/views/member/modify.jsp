@@ -6,6 +6,9 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<h1>member modify</h1>
+	<jsp:include page="/views/layout/nav.jsp"></jsp:include>
+	
 	<div>
 		<input type="hidden" name="mem_idx" value="1">
 		아이디 : <input type="text" name="mem_id" value="stephy" readonly><br>

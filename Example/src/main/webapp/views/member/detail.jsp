@@ -7,7 +7,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-	Member detail
+	<h1>member detail</h1>
+	<jsp:include page="/views/layout/nav.jsp"></jsp:include>
 	
 	<p>
 		아이디 : ${member.mem_id}
