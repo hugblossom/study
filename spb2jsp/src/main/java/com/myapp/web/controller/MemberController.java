@@ -4,14 +4,18 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -120,4 +124,35 @@ public class MemberController {
 	   return "member/selectById";
 	}
 	
+	// request
+	@PostMapping("/login") //객체와 request가 맵핑되려면 객체에 setter필요
+	public String login(HttpServletRequest request, Member member_in, Model model) {
+	   HttpSession session = request.getSession();
+	   
+	   Member member = mapper.selectById(member_in.getId());
+	   
+	   if (!StringUtils.isEmpty(member.getId()) || !"".equals(member.getId())) {
+		   session.setAttribute("session_member_logged", "true");
+		   session.setAttribute("session_member_id", member.getId());
+		   session.setAttribute("session_member_email", member.getEmail());
+	   }
+	   
+	   return "member/login";
+	}
+	
+	@GetMapping("/logout")
+	public String logout(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		
+		// session 소멸
+		session.invalidate();
+		
+		// session 속성 제거 (주로 사용)
+		session.setAttribute("session_member_logged", "false");
+		session.removeAttribute("session_member_id");
+		session.removeAttribute("session_member_email");
+		
+		return "viewName";
+	}
 }

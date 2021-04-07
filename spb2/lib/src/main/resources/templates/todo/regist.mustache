@@ -1,0 +1,76 @@
+{{>layout/header}} <!--  import 된다 -->
+
+<h1>member regist page</h1>
+
+<form action="/todo/regist" method="POST">
+	<input type="hidden" name="imp" value="0">
+	<p>중요도</p>
+	<input type="checkbox" name="impck">
+	<p>내용</p>
+	<textarea name="contents" id="" cols="30" rows="10"></textarea>
+	<p>실행일</p>
+	<input type="text" name="d_day" value="" minlength="8" maxlength="8">
+	<input type="submit" value="등록">
+</form>
+
+<script>
+	(function() {
+		var result = "{{#result}}{{result}}{{/result}}";
+		
+		if ( result ) {
+			if ( result == "0001" ) {
+				alert("중요도 값이 잘못되었습니다");
+				return;
+			} 
+			if ( result == "0002" ) {
+				alert("내용 값이 잘못되었습니다");
+				return;
+			}
+			if ( result == "0003" ) {
+				alert("내용 값이 잘못되었습니다");
+				return;
+			}
+			if ( result == "9999" ) {
+				alert("서버와의 통신이 원활하지 않습니다");
+				return;
+			}
+		}
+	
+		document.querySelector("input[name=imp]").value = "{{#imp}}{{imp}}{{/imp}}";
+		document.querySelector("textarea[name=contents]").value = "{{#contents}}{{contents}}{{/contents}}";
+		document.querySelector("input[name=d_day]").value = "{{#dDay}}{{dDay}}{{/dDay}}";
+	})();
+
+	document.querySelector("input[name=impck]").addEventListener("change", function() {
+		var target = event.target;
+		var imp = document.querySelector("input[name=imp]");
+		
+		if ( target.checked ) {
+			imp.value = "1"; //즁요
+		} else {
+			imp.value = "0";
+		}
+	});
+
+	function setNowDate() {
+		var now = new Date();
+		var year = now.getFullYear();
+		var month = now.getMonth() + 1;
+		var date = now.getDate();
+		
+		if ( month < 10 ) {
+			month = "0" + month;
+		}
+		
+		if ( date < 10 ) {
+			date = "0" + date;
+		}
+		
+		document.querySelector("input[name=d_day]").value = year + month + date;
+	}
+
+	setNowDate();
+	
+</script>
+
+{{>layout/footer}}

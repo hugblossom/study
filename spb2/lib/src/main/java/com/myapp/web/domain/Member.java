@@ -12,7 +12,6 @@ public class Member {
 	private String id;
 	private String nick;
 	private String passwd;
-	private String passwdConfirm;
 	private String email;
 	private String st;
 	private String role;

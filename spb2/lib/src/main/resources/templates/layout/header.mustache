@@ -7,3 +7,34 @@
 <link rel="stylesheet" href="/css/reset.css">
 </head>
 <body>
+<p>
+{{#session_member_id}}
+	{{session_member_id}} 님 반갑습니다
+{{/session_member_id}}
+{{^session_member_id}}
+	로그인해주세요
+{{/session_member_id}}
+</p>
+
+<ul>
+{{#session_member_id}}
+	<li>
+		<a href="/todo/list">할일</a>
+	</li>
+	<li>
+		<a href="/todo/regist">등록</a>
+	</li>
+	<li>
+		<a href="/member/mypage">{{session_member_id}} 님</a>
+		<a href="/member/logout">로그아웃</a>
+	</li>
+{{/session_member_id}}
+{{^session_member_id}}
+	<li>
+		<a href="/member/login">로그인</a>
+	</li>
+	<li>
+		<a href="/member/join">회원가입</a>
+	</li>
+{{/session_member_id}}
+</ul>

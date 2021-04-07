@@ -1,0 +1,79 @@
+{{>layout/header}} <!--  import 된다 -->
+
+<h1>member list page</h1>
+
+<ol>
+{{#todoList}}
+	<li>
+	<form action="/todo/modify" method="POST" class="todoForm todo_{{uid}}">
+		<input type="hidden" name="uid" value="{{uid}}">
+		<input type="hidden" name="seq" value="{{seq}}">
+		<input type="hidden" name="imp" value="{{imp}}">
+		<p>중요도</p>
+		<input type="checkbox" name="impck" disabled><br>
+		<p>내용</p>
+		<textarea name="contents" id="" cols="30" rows="10">{{contents}}</textarea>
+		<p>실행일</p>
+		<input type="text" name="d_day" value="{{dDay}}" minlength="8" maxlength="8" disabled>
+		<input type="submit" value="등록">
+	</form>
+		<a href="#" class="modifyBtn" data-uid="{{uid}}">수정</a>
+		<a href="#" class="deleteBtn" data-uid="{{uid}}" data-seq="{{seq}}">삭제</a>
+	</li>
+{{/todoList}}
+{{^todoList}}
+	<li>
+		<p>할 일이 없습니다</p>
+	</li>
+{{/todoList}}
+</ol>
+
+<script>
+	(function() {
+		document.querySelectorAll(".deleteBtn").forEach(function(item, index) {
+			item.addEventListener("click", function() {
+				var target = event.target;
+				var uid = target.getAttribute("data-uid");
+				var seq = target.getAttribute("data-seq");
+
+				if ( confirm("삭제하시겠습니까?")) {
+					var form = document.createElement("form");
+					form.action = "/todo/delete";
+					form.method = "POST";
+
+					var uid_input = document.createElement("input");
+					uid_input.type = "hidden";
+					uid_input.name = "uid";
+					uid_input.value = uid;
+
+					var seq_input = document.createElement("input");
+					seq_input.type = "hidden";
+					seq_input.name = "seq";
+					seq_input.value = seq;
+
+					form.appendChild(uid_input);
+					form.appendChild(seq_input);
+
+					document.body.appendChild(form);
+					form.submit();
+					document.body.remove(form);
+				}
+				
+			});
+		});
+
+		document.querySelector("input[name=impck]").addEventListener("change", function() {
+			var target = event.target;
+			var imp = document.querySelector("input[name=imp]");
+			
+			if ( target.checked ) {
+				imp.value = "1"; //즁요
+			} else {
+				imp.value = "0";
+			}
+		});
+	})()
+	
+</script>
+
+{{>layout/footer}}

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myapp.web.mapper.TodoImpl">
+
+	<insert id="insert" parameterType="TodoInsertDTO">
+		 INSERT INTO
+		 	t_todo (
+		 		seq
+		 		, imp
+		 		, contents
+		 		, id
+		 		, d_day
+		 	)
+		 SELECT
+		 	(
+		 		SELECT
+		 			IF (
+		 				MAX(seq) IS NULL
+		 				, 1
+		 				, MAX(seq) + 1
+		 			) AS seq
+		 		FROM
+		 			t_todo
+		 		WHERE
+		 			id = #{id}
+		 	)
+		 	, #{imp}
+		 	, #{contents}
+		 	, #{id}
+		 	, #{dDay}
+		 FROM
+		 	dual;
+	</insert>
+	
+	<select id="selectAll" parameterType="String" resultType="Todo">
+		SELECT uid, seq, imp, contents, id, d_day AS dDay FROM t_todo WHERE id = #{id}
+	</select>
+	
+	<select id="selectByUidAndId" parameterType="Todo" resultType="Todo">
+		SELECT uid, seq, imp, contents, id, d_day AS dDay FROM t_todo WHERE uid = #{uid} AND id = ${id}
+	</select>
+	
+	<select id="selectBySeqAndId" parameterType="Todo" resultType="Todo">
+		SELECT uid, seq, imp, contents, id, d_day AS dDay FROM t_todo WHERE seq = #{seq} AND id = ${id}
+	</select>
+	
+	<update id="update" parameterType="TodoUpdateDTO">
+		UPDATE
+			t_todo
+		SET
+			seq = #{seq}
+			, imp = #{imp}
+			, contents = #{contents}
+			, d_day = #{dDay}
+		WHERE
+			uid = #{uid} AND id = #{id}
+	</update>
+	
+	<update id="updateForGt" parameterType="TodoDeleteDTO">
+		UPDATE t_todo SET seq = (seq - 1) WHERE seq > #{seq} AND id = #{id}
+	</update>
+	
+	<delete id="delete" parameterType="TodoDeleteDTO">
+		DELETE FROM t_todo WHERE uid = #{uid} AND seq = #{seq} AND id = #{id}
+	</delete>
+	
+</mapper>

@@ -3,13 +3,24 @@
 <h1>member join page</h1>
 
 <form action="/member/join" method="POST">
-	아이디: <input type="text" name="mem_id"><br>
-	패스워드: <input type="text" name="mem_passwd"><br>
-	패스워드확인: <input type="text" name="mem_passwd_cf"><br>
-	
-	닉네임: <input type="text" name="mem_nick"><br>
-	이메일: <input type="text" name="mem_email"><br>
+	아이디: <input type="text" name="id"><br>
+	패스워드: <input type="text" name="passwd"><br>
+	패스워드확인: <input type="text" name="passwdCf"><br>
+	닉네임: <input type="text" name="nick"><br>
+	이메일: <input type="text" name="email"><br>
 	<input type="submit" value="가입">
 </form>
 
+<script>
+	(function() {
+		var result = "{{#result}}{{result}}{{/result}}{{^result}}{{/result}}";
+		
+		if ( result == "0000" ) {
+			alert("가입에 성공하였습니다");
+			location.href = "/member/login";	
+		} else {
+			alert("가입에 실패하였습니다");
+		}	
+	})();
+</script>
 {{>layout/footer}}

@@ -3,9 +3,10 @@ package com.myapp.web.domain;
 import java.util.Date;
 
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 
-@Getter
+@Data // Getter Setter ToString RequiredArgsConstructor (링크 참조)
 @Builder
 public class Member {
 	private int uid;
