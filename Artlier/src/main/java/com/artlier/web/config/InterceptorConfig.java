@@ -13,7 +13,7 @@ import com.artlier.web.interceptor.LoginInterceptor;
 public class InterceptorConfig implements WebMvcConfigurer {
 	
 	private static final List<String> LOGIN_ESSENTIAL = Arrays.asList("/member/**", "/board/**");
-	private static final List<String> LOGIN_INESSENTIAL = Arrays.asList("/member/login","/member/logout");
+	private static final List<String> LOGIN_INESSENTIAL = Arrays.asList("/member/login","/member/logout","/board/common/list");
 	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {

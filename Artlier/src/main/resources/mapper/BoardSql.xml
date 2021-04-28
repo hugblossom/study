@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.artlier.mapper.BoardMapper">
+<mapper namespace="com.artlier.web.mapper.BoardMapper">
 	
-	<select id="articleList" resultType="ArticleCommon">
+	<select id="selectCommonList" resultType="ArticleCommon">
 		SELECT
 			*
 		FROM
 			tb_art_board_common
 	</select>
+	
+	<select id="selectCommonListByUid" parameterType="int" resultType="ArticleCommon">
+		SELECT
+			*
+		FROM
+			tb_art_board_common
+		WHERE
+			uid = #{uid};
+	</select>
 
-	<insert id="boardWrite" parameterType="BoardCommonWriteDTO">
+	<insert id="boardCommonWrite" parameterType="BoardCommonWriteDTO">
 		INSERT INTO
-			t_art_board_common
+			tb_art_board_common
 			(
 				id
 				,nick
@@ -19,6 +28,7 @@
 				,contents
 				,article_pw
 				,allow_rep
+				,reg_date
 			)
 		VALUES
 			(
@@ -26,10 +36,32 @@
 				,#{nick}
 				,#{title}
 				,#{contents}
-				,#{article_pw}
-				,#{allow_rep}
+				,#{articlePw}
+				,#{allowRep}
+				,NOW()
 			)
 	</insert>
 	
+	<update id="boardCommonModify" parameterType="BoardCommonWriteDTO">
+		UPDATE
+			tb_art_board_commmon
+			(
+				,title
+				,contents
+				,article_pw
+				,allow_rep
+				,mod_date
+			)
+		VALUES
+			(
+				,#{title}
+				,#{contents}
+				,#{articlePw}
+				,#{allowRep}
+				,NOW()
+			)
+		WHERE
+			uid = #{uid}
+	</update>
 	
 </mapper>

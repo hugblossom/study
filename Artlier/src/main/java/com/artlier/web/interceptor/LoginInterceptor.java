@@ -24,9 +24,19 @@ public class LoginInterceptor implements HandlerInterceptor {
 			
 		} else {
 			
-			result = false;
+			String uri = request.getRequestURI();
+			String param = request.getQueryString();
+			String returnTarget = uri;
+			
+			if ( StringUtils.hasText(param) ) {
+				returnTarget = uri + param;
+			}
+			
+			request.getSession().setAttribute("return_target", returnTarget);
 			
 			response.sendRedirect("/member/login");
+			
+			result = false;
 		}
 		
 		return result;

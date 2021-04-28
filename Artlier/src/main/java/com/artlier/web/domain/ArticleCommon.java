@@ -11,12 +11,12 @@ public class ArticleCommon {
 	private String nick;
 	private String title;
 	private String contents;
-	private int articlePw;
+	private String article_pw;
 	private int st;
-	private int allowRep;
+	private int allow_rep;
 	private int view;
 	private int good;
 	private int bad;
-	private Date regDate;
-	private Date modDate;
+	private Date reg_date;
+	private Date mod_date;
 }

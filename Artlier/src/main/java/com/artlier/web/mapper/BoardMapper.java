@@ -12,6 +12,8 @@ import com.artlier.web.dto.BoardCommonWriteDTO;
 public interface BoardMapper {
 	
 	List<ArticleCommon> selectCommonList() throws SQLException;
+	ArticleCommon selectCommonListByUid(int uid) throws SQLException;
 	int boardCommonWrite(BoardCommonWriteDTO dto) throws SQLException;
+	int boardCommonModify(BoardCommonWriteDTO dto) throws SQLException;
 	
 }

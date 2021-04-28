@@ -57,16 +57,13 @@ public class MemberController {
 	}
 	
 	@GetMapping("/login")
-	public String getLogin(HttpServletRequest request) {
-		
-		String rturi = (String) request.getAttribute("return_uri");
-		System.out.println(rturi);
+	public String getLogin() {
 		
 		return "/member/login";
 	}
 	
 	@PostMapping("/login")
-	public String postLogin(LoginDTO dto, HttpServletRequest request, Model model) {
+	public String postLogin(LoginDTO dto, HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		
 		String ip		= request.getRemoteAddr();
@@ -76,6 +73,8 @@ public class MemberController {
 		int result		= 0;
 		Member member	= null;
 		LoginHistoryDTO ldto = null;
+		
+		String direction = "redirect:/";
 		
 		try {
 			// 아이디 null check
@@ -109,6 +108,16 @@ public class MemberController {
 			result	= 1;
 			session.setAttribute("member_id", member.getId());
 			session.setAttribute("member_nick", member.getNick());
+			
+			String returnTarget = (String) session.getAttribute("return_target");
+			
+			
+			if ( StringUtils.hasText(returnTarget) ) {
+				direction = "redirect:" + returnTarget;
+				
+				session.removeAttribute("return_target");
+			}
+			
 		} catch (RuntimeException re) {
 			System.out.println(re.getMessage());
 		} catch (SQLException sqle) {
@@ -132,13 +141,6 @@ public class MemberController {
 		} catch ( SQLException e ) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
-		session.setAttribute("rsMsg", rsMsg);
-		String direction = (String) request.getAttribute("return_uri");
-		System.out.println(direction);
-		if ( !StringUtils.hasText(direction) ) {
-			direction = "redirect:/"; 
 		}
 		
 		return direction;
