@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.artlier.mapper.BoardMapper">
+	
+	<select id="articleList" resultType="ArticleCommon">
+		SELECT
+			*
+		FROM
+			tb_art_board_common
+	</select>
+
+	<insert id="boardWrite" parameterType="BoardCommonWriteDTO">
+		INSERT INTO
+			t_art_board_common
+			(
+				id
+				,nick
+				,title
+				,contents
+				,article_pw
+				,allow_rep
+			)
+		VALUES
+			(
+				#{id}
+				,#{nick}
+				,#{title}
+				,#{contents}
+				,#{article_pw}
+				,#{allow_rep}
+			)
+	</insert>
+	
+	
+</mapper>

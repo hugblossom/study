@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.artlier.web.mapper.MemberMapper">
+
+	<select id="selectAll" parameterType="Member" resultType="Member">
+		SELECT
+			*
+		FROM
+			tb_art_member
+	</select>
+	
+	<select id="selectById" parameterType="LoginDTO" resultType="Member">
+		SELECT
+			*
+		FROM
+			tb_art_member
+		WHERE
+			id = #{id}
+	</select>
+	
+	<select id="memberLogin" parameterType="LoginDTO" resultType="Member">
+		SELECT
+			*
+		FROM
+			tb_art_member
+		WHERE
+			id = #{id} AND pw = #{pw}
+	</select>
+	
+	<select id="idExist" parameterType="String" resultType="int">
+		SELECT COUNT(*) AS cnt FROM tb_art_member WHERE id = #{id}
+	</select>
+	
+	<insert id="memberJoin" parameterType="Member">
+		INSERT INTO
+			tb_art_member
+			(
+				id
+				,pw
+				,nick
+			)
+		VALUES
+		(
+			#{id}
+			, #{pw}
+			, #{nick}
+		)
+	</insert>
+	
+	<insert id="loginHistory" parameterType="LoginHistoryDTO">
+		INSERT INTO
+			tb_art_member_history
+			(
+				uid
+				,id
+				,try_date
+				,succeed
+				,ip
+			)
+		VALUES
+		(
+			#{uid}
+			, #{id}
+			, NOW()
+			, #{succeed}
+			, #{ip}
+		)
+	</insert>
+
+</mapper>
