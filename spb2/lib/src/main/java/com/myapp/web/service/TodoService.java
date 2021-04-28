@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.myapp.web.domain.Todo;
 import com.myapp.web.dto.TodoDeleteDTO;
+import com.myapp.web.dto.TodoUpdateDTO;
 import com.myapp.web.mapper.TodoImpl;
 
 @Service
@@ -29,10 +30,10 @@ public class TodoService {
 		return result;
 	}
 	
-	public int updateOrder(Todo todo_in) {
+	public int update(TodoUpdateDTO dto) {
 		int result = 0;
 		
-		
+		result += todoMapper.update(dto);
 		
 		return result;
 	}

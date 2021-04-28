@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myapp.web.mapper.MonsterMapper">
+
+	<select id="selectAll" resultType="Monster">
+		SELECT * FROM t_monster
+	</select>
+	
+	<insert id="insert" parameterType="MonsterInsertDTO">
+		INSERT INTO t_monster (
+			level       
+			, name
+			, strength    
+			, dexterity   
+			, intelligence
+			, health      
+			, mana        
+			, type     
+			, exp         
+			, info     
+		) VALUES (
+			#{level}       
+			, #{name}
+			, #{strength}    
+			, #{dexterity}   
+			, #{intelligence}
+			, #{health}
+			, #{mana}     
+			, #{type}    
+			, #{exp}       
+			, #{info}
+		)
+	</insert>
+	
+</mapper>

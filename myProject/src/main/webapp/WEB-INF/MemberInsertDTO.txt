@@ -1,0 +1,61 @@
+package com.myapp.dto;
+
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@ToString
+@NoArgsConstructor
+public class MemberInsertDTO {
+	// require
+	private String mem_id;
+	private String mem_passwd;
+	private String mem_email;
+	
+	// optional
+	private String mem_nick;
+	private String mem_hobby;
+	
+	public MemberInsertDTO(Builder builder) {
+		this.mem_id		= builder.mem_id;
+		this.mem_passwd = builder.mem_passwd;
+		this.mem_email	= builder.mem_email;
+		this.mem_nick	= builder.mem_nick;
+		this.mem_hobby	= builder.mem_hobby;
+	}
+	
+	public static class Builder {
+		private String mem_id;
+		private String mem_passwd;
+		private String mem_email;
+		private String mem_nick;
+		private String mem_hobby;
+		
+		public Builder mem_id(String mem_id) {
+			this.mem_id = mem_id;
+			return this;
+		}
+		public Builder mem_passwd(String mem_passwd) {
+			this.mem_passwd = mem_passwd;
+			return this;
+		}
+		public Builder mem_email(String mem_email) {
+			this.mem_email = mem_email;
+			return this;
+		}
+		
+		public Builder mem_nick(String mem_nick) {
+			this.mem_nick = mem_nick;
+			return this;
+		}
+		
+		public Builder mem_hobby(String mem_hobby) {
+			this.mem_hobby = mem_hobby;
+			return this;
+		}
+		
+		public MemberInsertDTO build() {
+			return new MemberInsertDTO(this);
+		}
+		
+	}
+}

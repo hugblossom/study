@@ -1,0 +1,35 @@
+package com.myapp.dto;
+
+import com.myapp.dto.MemberInsertDTO.Builder;
+
+public class BuilderExample {
+	public static void main(String[] args) {
+		
+		// 생성자 패턴
+		//MemberInsertDTO dto = new MemberInsertDTO(String id, String pw);
+		//MemberInsertDTO dto = new MemberInsertDTO(String id, String pw, String email);
+				
+		// 자바빈 패턴
+//		MemberInsertDTO dto = new MemberInsertDTO();
+//		dto.setXXX(aaa);
+//		dto.setXXX(aaa);
+//		dto.setXXX(aaa);
+//		dto.setXXX(aaa);
+		
+		// 빌더 패턴
+		MemberInsertDTO dto01 = new MemberInsertDTO
+				.Builder()
+				.mem_nick("nick")
+				.mem_hobby("minicar")
+				.build();
+				
+		System.out.println(dto01.toString());
+		
+		MemberInsertDTO dto02 = new MemberInsertDTO
+				.Builder()
+				.mem_id("tmxpvl")
+				.build();
+		
+		System.out.println(dto02.toString());
+	}
+}

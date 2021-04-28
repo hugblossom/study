@@ -1,45 +1,40 @@
-{{>layout/header}} <!--  import 된다 -->
+{{>layout/header}}
 
-<h1>member list page</h1>
+<h1>todo list page</h1>
 
-<ol>
 {{#todoList}}
-	<li>
-	<form action="/todo/modify" method="POST" class="todoForm todo_{{uid}}">
-		<input type="hidden" name="uid" value="{{uid}}">
-		<input type="hidden" name="seq" value="{{seq}}">
-		<input type="hidden" name="imp" value="{{imp}}">
+	<form action="/todo/modify" method="POST" class="todoForm todo_{{uid}}" data-uid="{{uid}}">
+		<input type="hidden" name="uid" value="{{uid}}" />
+		<input type="hidden" name="seq" value="{{seq}}" />
+		<input type="hidden" name="imp" value="{{imp}}" />
 		<p>중요도</p>
-		<input type="checkbox" name="impck" disabled><br>
+		<input type="checkbox" name="impck" disabled><br />
 		<p>내용</p>
-		<textarea name="contents" id="" cols="30" rows="10">{{contents}}</textarea>
+		<textarea name="contents" cols="30" rows="10" disabled>{{contents}}</textarea><br />
 		<p>실행일</p>
-		<input type="text" name="d_day" value="{{dDay}}" minlength="8" maxlength="8" disabled>
-		<input type="submit" value="등록">
+		<input type="text" name="dDay" value="{{dDay}}" minlength="8" maxlength="8" disabled><br />
 	</form>
-		<a href="#" class="modifyBtn" data-uid="{{uid}}">수정</a>
-		<a href="#" class="deleteBtn" data-uid="{{uid}}" data-seq="{{seq}}">삭제</a>
-	</li>
+	<a href="#" class="modifyBtn" data-uid="{{uid}}">수정</a>
+	<a href="#" class="deleteBtn" data-uid="{{uid}}" data-seq="{{seq}}">삭제</a>
+	<a href="#" class="saveBtn" data-uid="{{uid}}">저장</a>
+	<br />
 {{/todoList}}
 {{^todoList}}
-	<li>
-		<p>할 일이 없습니다</p>
-	</li>
+	<p>할 일이 없습니다</p>
 {{/todoList}}
-</ol>
 
-<script>
+<script type="text/javascript">
 	(function() {
 		document.querySelectorAll(".deleteBtn").forEach(function(item, index) {
 			item.addEventListener("click", function() {
-				var target = event.target;
-				var uid = target.getAttribute("data-uid");
-				var seq = target.getAttribute("data-seq");
+				var target	= event.target;
+				var uid		= target.getAttribute("data-uid");
+				var seq		= target.getAttribute("data-seq");
 
-				if ( confirm("삭제하시겠습니까?")) {
+				if (confirm("삭제하시겠습니까?")) {
 					var form = document.createElement("form");
 					form.action = "/todo/delete";
-					form.method = "POST";
+					form.method = "post";
 
 					var uid_input = document.createElement("input");
 					uid_input.type = "hidden";
@@ -53,27 +48,74 @@
 
 					form.appendChild(uid_input);
 					form.appendChild(seq_input);
-
 					document.body.appendChild(form);
 					form.submit();
 					document.body.remove(form);
 				}
-				
 			});
 		});
 
-		document.querySelector("input[name=impck]").addEventListener("change", function() {
-			var target = event.target;
-			var imp = document.querySelector("input[name=imp]");
-			
-			if ( target.checked ) {
-				imp.value = "1"; //즁요
-			} else {
-				imp.value = "0";
-			}
+		// check box
+		document.querySelectorAll("input[name=impck]").forEach(function(item, index) {
+			item.addEventListener("change", function() {
+				var target  = event.target;
+				var parent	= target.parentElement;
+				var uid		= parent.getAttribute("data-uid");
+				var imp     = document.querySelector("form.todo_" + uid + " input[name=imp]");
+				
+				if (target.checked) {
+					imp.value = "1"; // 중요
+				} else {
+					imp.value = "0";
+				}
+			});
 		});
-	})()
-	
+
+		// important value
+		document.querySelectorAll("input[name=imp]").forEach(function(item, index) {
+				var parent	= item.parentElement;
+				var uid		= parent.getAttribute("data-uid");
+				var impck	= document.querySelector("form.todo_" + uid + " input[name=impck]");
+
+				if (item.value == "0") {
+					impck.checked = false;
+				} else {
+					impck.checked = true;
+				}
+		});
+		
+		document.querySelectorAll(".modifyBtn").forEach(function(item, index) {
+			item.addEventListener("click", function() {
+				var target	= event.target;
+				var uid		= target.getAttribute("data-uid");
+				var form	= document.querySelector("form.todo_" + uid);
+
+				if (form.classList.contains("on")) {
+					form.classList.remove("on");
+					document.querySelector("form.todo_" + uid + " input[name=impck]").disabled			= true;
+					document.querySelector("form.todo_" + uid + " textarea[name=contents]").disabled	= true;
+					document.querySelector("form.todo_" + uid + " input[name=dDay]").disabled			= true;
+				} else {
+					form.classList.add("on");
+					document.querySelector("form.todo_" + uid + " input[name=impck]").disabled			= false;
+					document.querySelector("form.todo_" + uid + " textarea[name=contents]").disabled	= false;
+					document.querySelector("form.todo_" + uid + " input[name=dDay]").disabled			= false;
+				}
+			});
+		});
+
+		document.querySelectorAll(".saveBtn").forEach(function(item, index) {
+			item.addEventListener("click", function() {
+				var target	= event.target;
+				var uid		= target.getAttribute("data-uid");
+				var form	= document.querySelector("form.todo_" + uid);
+
+				if (confirm("변경내용을 저장하시겠습니까?")) {
+					form.submit();
+				}
+			});
+		});
+	})();
 </script>
 
 {{>layout/footer}}

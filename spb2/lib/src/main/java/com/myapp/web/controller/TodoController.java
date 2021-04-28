@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.myapp.web.annotation.LoginCheck;
 import com.myapp.web.domain.Todo;
 import com.myapp.web.dto.TodoDeleteDTO;
 import com.myapp.web.dto.TodoInsertDTO;
+import com.myapp.web.dto.TodoUpdateDTO;
 import com.myapp.web.mapper.TodoImpl;
 import com.myapp.web.service.TodoService;
 
@@ -31,6 +33,7 @@ public class TodoController {
 	private TodoService todoService;
 	
 	@GetMapping("/list")
+	@LoginCheck
 	public String getList(HttpServletRequest request, Model model) {
 		
 		HttpSession session = request.getSession();
@@ -44,11 +47,13 @@ public class TodoController {
 	}
 	
 	@GetMapping("/regist")
+	@LoginCheck
 	public String getRegist() {
 		return "/todo/regist";
 	}
 	
 	@PostMapping("/regist")
+	@LoginCheck
 	public String postRegist(HttpServletRequest request, @RequestParam("imp") String imp_in, @RequestParam("contents") String contents_in, @RequestParam("d_day") String dDay_in, Model model) {
 		String direction = "redirect:/todo/list";
 		String resultCode = "0000";
@@ -105,10 +110,22 @@ public class TodoController {
 	}
 	
 	@PostMapping("/delete")
+	@LoginCheck
 	public String getDelete(HttpServletRequest request, @RequestParam("uid") int uid, @RequestParam("seq") int seq) {
 		String id = (String) request.getSession().getAttribute("session_member_id");
 		
 		todoService.delete(new TodoDeleteDTO(uid, seq, id));
+		
+		return "redirect:/todo/list";
+	}
+	
+	@PostMapping("/modify")
+	@LoginCheck
+	public String postModify(HttpServletRequest request, TodoUpdateDTO dto) {
+		String id = (String) request.getSession().getAttribute("session_member_id");
+		dto.setId(id);
+		
+		todoService.update(dto);
 		
 		return "redirect:/todo/list";
 	}
