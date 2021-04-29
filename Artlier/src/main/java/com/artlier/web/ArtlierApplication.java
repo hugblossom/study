@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan(basePackages = "com.artlier")
+@MapperScan(basePackages = "com.artlier.web")
 public class ArtlierApplication {
 
 	public static void main(String[] args) {

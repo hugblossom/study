@@ -49,7 +49,7 @@
 	
 	<insert id="loginHistory" parameterType="LoginHistoryDTO">
 		INSERT INTO
-			tb_art_member_history
+			tb_art_member_login
 			(
 				uid
 				,id

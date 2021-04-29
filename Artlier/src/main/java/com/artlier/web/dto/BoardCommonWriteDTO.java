@@ -1,7 +1,5 @@
 package com.artlier.web.dto;
 
-import org.springframework.lang.Nullable;
-
 import lombok.Data;
 
 @Data
