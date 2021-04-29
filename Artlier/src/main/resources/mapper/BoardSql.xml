@@ -7,6 +7,15 @@
 			*
 		FROM
 			tb_art_board_common
+		ORDER BY
+			uid DESC
+	</select>
+	
+	<select id="countCommonList" resultType="int">
+		SELECT
+			COUNT(*) AS cnt
+		FROM
+			tb_art_board_common
 	</select>
 	
 	<select id="selectCommonListByUid" parameterType="int" resultType="ArticleCommon">
@@ -42,24 +51,15 @@
 			)
 	</insert>
 	
-	<update id="boardCommonModify" parameterType="BoardCommonWriteDTO">
+	<update id="boardCommonModify" parameterType="BoardCommonModifyDTO">
 		UPDATE
-			tb_art_board_commmon
-			(
-				,title
-				,contents
-				,article_pw
-				,allow_rep
-				,mod_date
-			)
-		VALUES
-			(
-				,#{title}
-				,#{contents}
-				,#{articlePw}
-				,#{allowRep}
-				,NOW()
-			)
+			tb_art_board_common
+		SET
+			title = #{title}
+			,contents = #{contents}
+			,article_pw = #{articlePw}
+			,allow_rep = #{allowRep}
+			,mod_date = NOW()
 		WHERE
 			uid = #{uid}
 	</update>

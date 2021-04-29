@@ -11,9 +11,9 @@
 	/ 최종수정일 : ${article_common.mod_date}
 	</c:if>
 </p>
-<p><textarea name="" id="" cols="30" rows="10" readonly>${article_common.contents}</textarea></p>
+<p>${article_common.contents}</p>
 
-<a href="/board/common/modify?uid=${article_common.uid}">수정</a>
+<c:if test="${sessionScope.member_id eq article_common.id}"><a href="/board/common/modify?uid=${article_common.uid}">수정</a></c:if>
 <a href="/board/common/list">목록</a>
 
 <%@ include file="./../../layout/footer.jsp" %>

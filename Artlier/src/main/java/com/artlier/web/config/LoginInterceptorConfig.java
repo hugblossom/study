@@ -10,10 +10,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.artlier.web.interceptor.LoginInterceptor;
 
 @Configuration
-public class InterceptorConfig implements WebMvcConfigurer {
+public class LoginInterceptorConfig implements WebMvcConfigurer {
 	
 	private static final List<String> LOGIN_ESSENTIAL = Arrays.asList("/member/**", "/board/**");
-	private static final List<String> LOGIN_INESSENTIAL = Arrays.asList("/member/login", "/member/logout", "/member/join", "/board/common/list");
+	private static final List<String> LOGIN_INESSENTIAL = Arrays.asList("/member/login", "/member/logout", "/member/join", "/board/common/list", "/board/common/detail");
 	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {

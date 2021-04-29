@@ -3,14 +3,27 @@
 
 <h1>board common list</h1>
 
-<ul>
-	<c:forEach var="row" items="${article_common}">
-	<li>
-		<a href="/board/common/detail?uid=${row.uid}">${row.nick} / ${row.title} / ${row.reg_date}</a>
-	</li>
+<table>
+	<thead>
+		<th>No</th>
+		<th>제목</th>
+		<th>작성자</th>
+		<th>작성일</th>
+	</thead>
+	<tbody>
+	<c:forEach var="row" items="${article_common}" varStatus="i">
+	<tr>
+		<td>${(i.index - article_count) * -1 }</td>
+		<td><a href="/board/common/detail?uid=${row.uid}">${row.title}</a></td>
+		<td>${row.nick}</td>
+		<td>${row.reg_date}</td>
+	</tr>
 	</c:forEach>
-</ul>
+	</tbody>
+</table>
 
 <p><a href="/board/common/write">글쓰기</a></p>
+
+${pagination}
 
 <%@ include file="./../../layout/footer.jsp" %>

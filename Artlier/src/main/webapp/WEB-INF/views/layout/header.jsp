@@ -16,5 +16,6 @@
 		</c:if>
 	</div>
 	<div>
-		<a href="/board/common/list">게시판</a>
+		<a href="/board/common/list?page=1">자유게시판</a>
+		/ <a href="/board/gallery/list">이미지게시판</a>
 	</div>

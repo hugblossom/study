@@ -1,7 +1,5 @@
 package com.artlier.web.domain;
 
-import java.util.Date;
-
 import lombok.Data;
 
 @Data
@@ -17,6 +15,6 @@ public class ArticleCommon {
 	private int view;
 	private int good;
 	private int bad;
-	private Date reg_date;
-	private Date mod_date;
+	private String reg_date;
+	private String mod_date;
 }

@@ -29,7 +29,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 			String returnTarget = uri;
 			
 			if ( StringUtils.hasText(param) ) {
-				returnTarget = uri + param;
+				returnTarget = uri + "?" + param;
 			}
 			
 			request.getSession().setAttribute("return_target", returnTarget);

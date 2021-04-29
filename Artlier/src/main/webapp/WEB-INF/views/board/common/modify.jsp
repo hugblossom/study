@@ -1,11 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="./../../layout/header.jsp" %>
 
-<h1>board common detail</h1>
+<h1>board common modify</h1>
 
 <form action="/board/common/modify" method="POST">
 <input type="hidden" name="uid" value="${article_common.uid}">
+<input type="hidden" name="allowRep" value="${article_common.allow_rep}">
 <h2><input type="text" name="title" value="${article_common.title}"></h2>
+댓글허용<input type="checkbox" name="allowRepOption" ${article_common.allow_rep eq 1 ? "checked" : ""}>
 <p>
 	작성자 : ${article_common.nick} 
 	/ 등록일 : ${article_common.reg_date} 
@@ -14,9 +16,25 @@
 	</c:if>
 </p>
 <p><textarea name="contents" id="" cols="30" rows="10">${article_common.contents}</textarea></p>
+<input type="password" name="articlePw" value="${article_common.article_pw}"><br>
 <input type="submit" value="저장">
 </form>
 <a href="/board/common/detail?uid=${article_common.uid}">취소</a>
 <a href="/board/common/list">목록</a>
+
+<script>
+	(function() {
+		document.querySelector("input[name=allowRepOption]").addEventListener("change", function() {
+			var target = event.target;
+			var allowRepOption = document.querySelector("input[name=allowRep]");
+				if ( target.checked ) {
+					allowRepOption.value = 1;
+				} else {
+					allowRepOption.value = 0;
+				}
+		});
+		
+	})();
+</script>
 
 <%@ include file="./../../layout/footer.jsp" %>

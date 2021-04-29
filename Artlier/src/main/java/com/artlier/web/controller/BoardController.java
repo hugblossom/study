@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.artlier.web.domain.ArticleCommon;
+import com.artlier.web.dto.BoardCommonModifyDTO;
 import com.artlier.web.dto.BoardCommonWriteDTO;
 import com.artlier.web.mapper.BoardMapper;
+import com.artlier.web.util.Pagination;
 
 @Controller
 @RequestMapping("/board")
@@ -25,18 +29,30 @@ public class BoardController {
 	@Autowired
 	private BoardMapper boardMapper;
 	
+	@Transactional
 	@GetMapping("/common/list")
-	public String getCommonList(HttpServletRequest request) {
+	public String getCommonList(@RequestParam int page, Model model, HttpServletRequest request) {
 		
 		List<ArticleCommon> acList = new ArrayList<>();
+		String uri = request.getRequestURI();
+		int totalCount = 0;
 		
 		try {
 			
 			acList = boardMapper.selectCommonList();
+			totalCount = boardMapper.countCommonList();
 			
+			Pagination pagination = new Pagination(totalCount, 10, 10, page, uri);
+			String paging = pagination.buildPagination();
+			
+			model.addAttribute("pagination", paging);
+			
+			System.out.println(paging);
+						
 			if ( !ObjectUtils.isEmpty(acList) ) {
 				
-				request.setAttribute("article_common", acList);
+				model.addAttribute("article_common", acList);
+				model.addAttribute("article_count", totalCount);
 				
 			}
 			
@@ -113,7 +129,7 @@ public class BoardController {
 	}
 	
 	@PostMapping("/common/modify")
-	public String postCommonModify(@RequestParam String uid, BoardCommonWriteDTO dto) {
+	public String postCommonModify(@RequestParam String uid, BoardCommonModifyDTO dto) {
 		
 		try {
 		
@@ -131,6 +147,6 @@ public class BoardController {
 		}
 		
 	
-		return "redirect:/board/common/detail?" + uid;
+		return "redirect:/board/common/detail?uid=" + uid;
 	}
 }

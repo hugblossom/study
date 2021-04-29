@@ -2,9 +2,9 @@
 <%@ include file="./../layout/header.jsp" %>
 
 <form action="/member/join" method="POST">
-	<input type="text" name="id"><br>
-	<input type="text" name="nick"><br>
-	<input type="password" name="pw"><br>
+	아이디 : <input type="text" name="id"><br>
+	닉네임 : <input type="text" name="nick"><br>
+	비밀번호 : <input type="password" name="pw"><br>
 	<input type="submit" value="가입">
 </form>
 
