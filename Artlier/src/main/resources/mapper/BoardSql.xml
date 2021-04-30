@@ -26,6 +26,17 @@
 		WHERE
 			uid = #{uid};
 	</select>
+	
+	<select id="selectCommonListByPage" parameterType="paginationDTO" resultType="ArticleCommon">
+		SELECT
+			*
+		FROM
+			tb_art_board_common
+		ORDER BY
+			uid DESC
+		limit
+			#{pageMin}, #{pageMax}
+	</select>
 
 	<insert id="boardCommonWrite" parameterType="BoardCommonWriteDTO">
 		INSERT INTO

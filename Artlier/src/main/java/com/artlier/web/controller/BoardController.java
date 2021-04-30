@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.artlier.web.domain.ArticleCommon;
 import com.artlier.web.dto.BoardCommonModifyDTO;
 import com.artlier.web.dto.BoardCommonWriteDTO;
+import com.artlier.web.dto.PaginationDTO;
 import com.artlier.web.mapper.BoardMapper;
 import com.artlier.web.util.Pagination;
 
@@ -36,19 +37,24 @@ public class BoardController {
 		List<ArticleCommon> acList = new ArrayList<>();
 		String uri = request.getRequestURI();
 		int totalCount = 0;
-		
 		try {
-			
-			acList = boardMapper.selectCommonList();
 			totalCount = boardMapper.countCommonList();
 			
 			Pagination pagination = new Pagination(totalCount, 10, 10, page, uri);
+			int pageMin = pagination.getPageMin();
+			int pageMax = pagination.getPageMax();
 			String paging = pagination.buildPagination();
+			
+			System.out.println(paging);
 			
 			model.addAttribute("pagination", paging);
 			
-			System.out.println(paging);
-						
+			PaginationDTO dto = new PaginationDTO();
+			dto.setPageMin(pageMin);
+			dto.setPageMax(pageMax);
+			
+			acList = boardMapper.selectCommonListByPage(dto);
+			
 			if ( !ObjectUtils.isEmpty(acList) ) {
 				
 				model.addAttribute("article_common", acList);
@@ -104,7 +110,7 @@ public class BoardController {
 			e.printStackTrace();
 		}
 		
-		return "redirect:/board/common/list";
+		return "redirect:/board/common/list?page=1";
 	}
 	
 	@GetMapping("/common/modify")
@@ -120,6 +126,7 @@ public class BoardController {
 				request.setAttribute("article_common", ac);
 				
 			}
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
