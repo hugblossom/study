@@ -35,23 +35,20 @@ public class BoardController {
 	public String getCommonList(@RequestParam int page, Model model, HttpServletRequest request) {
 		
 		List<ArticleCommon> acList = new ArrayList<>();
-		String uri = request.getRequestURI();
 		int totalCount = 0;
 		try {
 			totalCount = boardMapper.countCommonList();
 			
-			Pagination pagination = new Pagination(totalCount, 10, 10, page, uri);
-			int pageMin = pagination.getPageMin();
-			int pageMax = pagination.getPageMax();
+			Pagination pagination = new Pagination(totalCount, 5, 2, page);
+			int pageMin = pagination.getArticleStart(page);
+			int articles = pagination.getArticleLimit();
 			String paging = pagination.buildPagination();
-			
-			System.out.println(paging);
 			
 			model.addAttribute("pagination", paging);
 			
 			PaginationDTO dto = new PaginationDTO();
 			dto.setPageMin(pageMin);
-			dto.setPageMax(pageMax);
+			dto.setArticles(articles);
 			
 			acList = boardMapper.selectCommonListByPage(dto);
 			
@@ -59,7 +56,8 @@ public class BoardController {
 				
 				model.addAttribute("article_common", acList);
 				model.addAttribute("article_count", totalCount);
-				
+				model.addAttribute("this_page", page);
+				model.addAttribute("article_limit", articles);
 			}
 			
 		} catch (SQLException e) {
@@ -71,7 +69,7 @@ public class BoardController {
 	}
 	
 	@GetMapping("/common/detail")
-	public String getCommonDetail(@RequestParam int uid, HttpServletRequest request) {
+	public String getCommonDetail(@RequestParam int page, @RequestParam int uid, Model model) {
 		
 		ArticleCommon ac = new ArticleCommon();
 	
@@ -81,8 +79,8 @@ public class BoardController {
 			
 			if ( !ObjectUtils.isEmpty(ac) ) {
 				
-				request.setAttribute("article_common", ac);
-				
+				model.addAttribute("article_common", ac);
+				model.addAttribute("this_page", page);
 			}
 			
 		} catch (SQLException e) {

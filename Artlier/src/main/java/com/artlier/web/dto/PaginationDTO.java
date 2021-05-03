@@ -6,6 +6,6 @@ import lombok.Data;
 public class PaginationDTO {
 	
 	private int pageMin;
-	private int pageMax;
+	private int articles;
 	
 }

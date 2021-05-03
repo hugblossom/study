@@ -14,6 +14,6 @@
 <p>${article_common.contents}</p>
 
 <c:if test="${sessionScope.member_id eq article_common.id}"><a href="/board/common/modify?uid=${article_common.uid}">수정</a></c:if>
-<a href="/board/common/list">목록</a>
+<a href="/board/common/list?page=${this_page}">목록</a>
 
 <%@ include file="./../../layout/footer.jsp" %>

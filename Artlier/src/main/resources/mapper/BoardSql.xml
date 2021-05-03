@@ -35,7 +35,7 @@
 		ORDER BY
 			uid DESC
 		limit
-			#{pageMin}, #{pageMax}
+			#{pageMin}, #{articles}
 	</select>
 
 	<insert id="boardCommonWrite" parameterType="BoardCommonWriteDTO">

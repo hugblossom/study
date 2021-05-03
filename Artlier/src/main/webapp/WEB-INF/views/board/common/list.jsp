@@ -5,19 +5,21 @@
 
 <table>
 	<thead>
-		<th>No</th>
-		<th>제목</th>
-		<th>작성자</th>
-		<th>작성일</th>
+		<tr>
+			<th>No</th>
+			<th>제목</th>
+			<th>작성자</th>
+			<th>작성일</th>
+		</tr>
 	</thead>
 	<tbody>
 	<c:forEach var="row" items="${article_common}" varStatus="i">
-	<tr>
-		<td>${(i.index - article_count) * -1 }</td>
-		<td><a href="/board/common/detail?uid=${row.uid}">${row.title}</a></td>
-		<td>${row.nick}</td>
-		<td>${row.reg_date}</td>
-	</tr>
+		<tr>
+			<td>${article_count - (this_page - 1) * article_limit - i.index}</td>
+			<td><a href="/board/common/detail?page=${this_page}&uid=${row.uid}">${row.title}</a></td>
+			<td>${row.nick}</td>
+			<td>${row.reg_date}</td>
+		</tr>
 	</c:forEach>
 	</tbody>
 </table>

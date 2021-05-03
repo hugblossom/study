@@ -10,21 +10,18 @@ public class Pagination {
 	int articleLimit = 0;
 	int pageLimit = 0;
 	int pageTotalLimit = 0;
-	int thisPage = 1;
+	int thisPage = 2;
 	int thisPageSet = 0;
 	int pageSetMin = 0;
 	int pageSetMax = 0;
 	
-	String uri= "";
-	
-	public Pagination(int totalCount, int articleLimit, int pageLimit, int thisPage, String uri) {
+	public Pagination(int totalCount, int articleLimit, int pageLimit, int thisPage) {
 		this.totalCount = totalCount;
 		this.articleLimit = articleLimit;
 		this.pageLimit = pageLimit;
 		this.thisPage = thisPage;
-		this.uri = uri;
 		
-		getThisPageSet();
+		getThisPageSet(thisPage);
 		getPageSetMin();
 		getPageSetMax();
 		getPageTotalLimit();
@@ -42,16 +39,33 @@ public class Pagination {
 		return this.pageLimit;
 	}
 	
-	public void getThisPageSet() {
+	public int getThisPage() {
+		return this.thisPage;
+	}
+	
+	public int getThisPageSet(int thisPage) {
+		int temp = (int) Math.floor( (double) thisPage / (this.pageLimit + 1) );
+		int thisPageSet = temp + 1;
+		System.out.println("temp : " + temp);
+		System.out.println("thisPageSet : " + thisPageSet);
+		this.thisPageSet = thisPageSet;
 		
-		this.thisPageSet = (int) Math.floor(this.thisPage/ this.pageLimit);
-			
+		return thisPageSet;
+	}
+	
+	public int getArticleStart(int page) {
+		
+		//int articleStart = Math.abs(this.totalCount - page * this.articleLimit);
+		int articleStart = Math.abs((page - 1) * this.articleLimit);
+		
+		return articleStart;
+		
 	}
 	
 	public int getPageSetMin() {
 		
-		int pageSetMin = this.thisPageSet * this.pageLimit + 1;
-		
+		int pageSetMin = (this.thisPageSet - 1) * this.pageLimit + 1;
+		System.out.println("pageSetMin : " + pageSetMin);
 		this.pageSetMin = pageSetMin;
 		
 		return pageSetMin;
@@ -59,7 +73,7 @@ public class Pagination {
 	
 	public int getPageSetMax() {
 		
-		int pageSetMax = (this.thisPageSet + 1) * this.pageLimit;
+		int pageSetMax = this.thisPageSet * this.pageLimit;
 
 		this.pageSetMax = pageSetMax;
 		
@@ -68,8 +82,7 @@ public class Pagination {
 	
 	public int getPageTotalLimit() {
 		int pageTotalLimit = 0;
-		int temp = (int) Math.ceil(this.totalCount / this.articleLimit);
-		
+		int temp = (int) Math.ceil( (double) this.totalCount / this.articleLimit);
 		if ( temp == 0 ) {
 			pageTotalLimit = 1;
 		} else {
@@ -83,14 +96,14 @@ public class Pagination {
 	
 	public int getPageMin() {
 		
-		int pageMin = (this.thisPage - 1) * this.articleLimit;
+		int pageMin = (this.thisPageSet - 1) * this.articleLimit;
 		
 		return pageMin;
 	}
 	
 	public int getPageMax() {
 		
-		int pageMax = (this.thisPage * this.articleLimit) + 1;
+		int pageMax = this.thisPageSet * this.articleLimit;
 		
 		return pageMax;
 	}
@@ -98,20 +111,47 @@ public class Pagination {
 	public String buildPagination() {
 		
 		List<String> pageList = new ArrayList<>();
-		System.out.println(pageSetMin);
-		System.out.println(pageSetMax);
-		System.out.println(pageTotalLimit);
-		for ( int i = this.pageSetMin; i < this.pageSetMax; i++ ) {
+		int pageTotalLimit = getPageTotalLimit();
+		String prev = "";
+		String resultList = "";
+		String next = "";
+		String result = "";
+		
+		for ( int i = this.pageSetMin; i <= this.pageSetMax; i++ ) {
 
-			if ( i <= getPageTotalLimit() ) {
+			if ( i <= pageTotalLimit ) {
 				
 				String temp = "<a href='/board/common/list?page=" + i + "'>" + i + "</a>";
 			
 				pageList.add(temp);
+				resultList = Arrays.toString(pageList.toArray()).replace("[","").replace("]","").replace(",","");
 			}
 		}
 		
-		String result = Arrays.toString(pageList.toArray()).replace("[","").replace("]","");
+		if ( this.thisPage > 1 && this.thisPageSet > 1 ) {
+			
+			prev = "<a href='/board/common/list?page=1'>처음</a>";
+			
+		}
+		
+		if ( this.thisPageSet > 1 ) {
+			
+			prev += "<a href='/board/common/list?page=" + ( (this.thisPageSet - 1) * this.pageLimit) + "'>이전</a>";
+			
+		}
+		
+		if ( pageTotalLimit > this.thisPageSet * this.pageLimit ) {
+			
+			next = "<a href='/board/common/list?page=" + (this.thisPageSet * this.pageLimit + 1) + "'>다음</a>";
+			
+		}
+		
+		if ( this.thisPage < pageTotalLimit && this.thisPageSet <= pageTotalLimit / this.pageLimit ) {
+			
+			next += "<a href='/board/common/list?page=" + pageTotalLimit + "'>마지막</a>";
+		}
+		
+		result = prev + resultList + next;
 		
 		return result;
 	}
