@@ -1,12 +1,12 @@
 package com.artlier.web.dto;
 
-import java.util.Date;
-
 import lombok.Data;
 
 @Data
 public class BoardCommonModifyDTO {
+	private String code;
 	private int uid;
+	private String id;
 	private String title;
 	private String contents;
 	private String articlePw;

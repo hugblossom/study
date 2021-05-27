@@ -1,10 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="./../layout/header.jsp" %>
 
-<form action="/member/login" method="POST">
-	<input type="text" name="id"><br>
-	<input type="text" name="pw">
-	<input type="submit" value="로그인">
-</form>
+<div class="login_box">
+	<div class="inner_box">
+	<form action="/member/login" method="POST">
+		<p class="row">
+			<span class="title">아이디</span><input type="text" name="id">
+		</p>
+		<p class="row">
+			<span class="title">비밀번호</span><input type="password" name="pw">
+		</p>
+		<div class="btn_box">
+			<input type="submit" class="btn" value="로그인">
+		</div>
+	</form>
+	</div>
+</div>
 
 <%@ include file="./../layout/footer.jsp" %>

@@ -3,7 +3,7 @@
 
 <h1>board common modify</h1>
 
-<form action="/board/common/modify" method="POST">
+<form action="/board/common/modify?code=${board_code}&uid=${article_common.uid}&page=${this_page}" method="POST">
 <input type="hidden" name="uid" value="${article_common.uid}">
 <input type="hidden" name="allowRep" value="${article_common.allow_rep}">
 <h2><input type="text" name="title" value="${article_common.title}"></h2>
@@ -19,8 +19,8 @@
 <input type="password" name="articlePw" value="${article_common.article_pw}"><br>
 <input type="submit" value="저장">
 </form>
-<a href="/board/common/detail?uid=${article_common.uid}">취소</a>
-<a href="/board/common/list">목록</a>
+<a href="/board/common/detail?code=${board_code}&uid=${article_common.uid}&page=${this_page}">취소</a>
+<a href="/board/common/list?code=${board_code}&page=${this_page}">목록</a>
 
 <script>
 	(function() {

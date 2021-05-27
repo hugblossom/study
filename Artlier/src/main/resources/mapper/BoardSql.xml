@@ -2,13 +2,49 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.artlier.web.mapper.BoardMapper">
 	
-	<select id="selectCommonList" resultType="ArticleCommon">
+	<select id="selectCommonList" parameterType="String" resultType="ArticleCommon">
 		SELECT
-			*
+			C.*
+		    ,AB.view_count
+		    ,AB.like_count
 		FROM
-			tb_art_board_common
-		ORDER BY
-			uid DESC
+			tb_art_board_common C,
+			(
+				SELECT
+					A.uid
+				    ,A.ip
+				    ,A.view_count
+				    ,B.mem_id
+				    ,B.like_count
+				FROM
+				(
+					(
+						SELECT
+							uid, ip, count(*) AS view_count
+						FROM
+							tb_art_board_history
+						WHERE 
+							action = 'VIEW'
+						GROUP BY
+							uid
+						) A,
+						(
+						SELECT
+							uid, mem_id, count(*) AS like_count
+						FROM
+							tb_art_board_history
+						WHERE 
+							action = 'LIKE'
+						GROUP BY
+							uid
+						) B
+					)
+				WHERE
+					A.uid = B.uid
+			) AB
+		WHERE
+			AB.uid = C.uid
+
 	</select>
 	
 	<select id="countCommonList" resultType="int">
@@ -16,33 +52,250 @@
 			COUNT(*) AS cnt
 		FROM
 			tb_art_board_common
+		WHERE
+			code = #{code} AND st = 0
 	</select>
 	
-	<select id="selectCommonListByUid" parameterType="int" resultType="ArticleCommon">
+	<select id="selectCommonListByUid" parameterType="ArticleCommon" resultType="ArticleCommon">
+		SELECT
+			D.*
+		FROM
+			(
+				SELECT
+					C.*
+				    ,IFNULL(AB.view_count, 0) AS view_count
+			    	,IFNULL(AB.like_count, 0) AS like_count
+				FROM
+					tb_art_board_common C
+				LEFT JOIN
+					(
+						SELECT
+							A.uid
+							,A.code
+	                        ,A.action AS do_view
+							,A.view_count
+							,B.action AS do_like
+							,B.mem_id
+							,B.like_count
+						FROM
+							(
+								SELECT
+									uid, code, action, ip, count(*) AS view_count
+								FROM
+									tb_art_board_history
+								WHERE 
+									uid = #{uid} AND action = 'VIEW'
+								GROUP BY
+									uid
+							) A
+						LEFT JOIN
+							(
+								SELECT
+									uid, code, action, mem_id, count(*) AS like_count
+								FROM
+									tb_art_board_history
+								WHERE 
+									uid = #{uid} AND action = 'LIKE'
+								GROUP BY
+									uid
+							) B
+						ON
+							A.uid = B.uid AND A.code = B.code
+					) AB
+				ON
+					C.uid = AB.uid AND C.code = AB.code
+			) D
+		WHERE
+			D.uid = #{uid} AND D.code = #{code}
+	</select>
+	
+	<select id="selectReplyListByUidAndSeq" parameterType="BoardCommonReplyDTO" resultType="BoardCommonReplyDTO">
+		
 		SELECT
 			*
 		FROM
-			tb_art_board_common
-		WHERE
-			uid = #{uid};
+			(
+			SELECT
+				rep_uid AS uid, rep_uid, code, article_uid, if(seq = 0, 100000000, seq) AS seq, parent_uid, mem_id, mem_nick, rep_contents, st, reg_date, mod_date
+			FROM
+				tb_art_board_reply
+			WHERE
+				code = 'NM' AND article_uid = #{article_uid} AND st = 0 AND ancestor_uid = 0
+			) A
+		UNION
+		    (
+		    SELECT
+				ancestor_uid AS uid, rep_uid, code, article_uid, seq, parent_uid, mem_id, mem_nick, rep_contents, st, reg_date, mod_date
+			FROM
+				tb_art_board_reply
+			WHERE
+				code = #{code} AND article_uid = #{article_uid} AND st = 0 AND ancestor_uid != 0
+			ORDER BY
+				seq DESC
+			)
+		ORDER BY
+			uid DESC, seq DESC
+		
 	</select>
 	
 	<select id="selectCommonListByPage" parameterType="paginationDTO" resultType="ArticleCommon">
+	
 		SELECT
-			*
+			E.*
+			, F.rep_count
+		FROM
+			(
+			SELECT
+				D.*
+			FROM
+				(
+					SELECT
+						C.*
+					    ,IFNULL(AB.view_count, 0) AS view_count
+				    	,IFNULL(AB.like_count, 0) AS like_count
+					FROM
+						(
+							SELECT
+								*
+							FROM
+								tb_art_board_common C
+							WHERE
+								st = 0
+						) C
+					LEFT JOIN
+						(
+							SELECT
+								A.uid
+								,A.code
+		                        ,A.action AS do_view
+								,A.view_count
+								,B.action AS do_like
+								,B.like_count
+							FROM
+								(
+									SELECT
+										uid, code, action, ip, count(*) AS view_count
+									FROM
+										tb_art_board_history
+									WHERE 
+										code = #{code} AND action = 'VIEW'
+									GROUP BY
+										uid
+								) A
+							LEFT JOIN
+								(
+									SELECT
+										uid, code, action, mem_id, count(*) AS like_count
+									FROM
+										tb_art_board_history
+									WHERE 
+										code = #{code} AND action = 'LIKE'
+									GROUP BY
+										uid
+								) B
+							ON
+								A.uid = B.uid AND A.code = B.code
+						) AB
+					ON
+						C.uid = AB.uid AND C.code = AB.code
+				) D
+			WHERE
+				D.code = #{code}
+			ORDER BY
+				D.uid DESC
+			limit
+				#{pageMin}, #{articles}
+			) E
+		LEFT JOIN
+			(
+				SELECT
+					article_uid, COUNT(article_uid) AS rep_count
+				FROM
+					tb_art_board_reply
+				WHERE
+					code = 'NM'
+				GROUP BY
+					article_uid
+			) F
+		ON
+			E.uid = F.article_uid
+		
+			
+	</select>
+	
+	<select id="selectLastInsertId" parameterType="BoardCommonWriteDTO" resultType="integer">
+	
+		SELECT
+			uid
 		FROM
 			tb_art_board_common
+		WHERE
+			code = #{code} AND id = #{id}
 		ORDER BY
 			uid DESC
-		limit
-			#{pageMin}, #{articles}
+		LIMIT
+			1
+			
+	</select>
+	
+	<select id="selectBoardHistory" parameterType="BoardCommonHistoryDTO" resultType="BoardCommonHistoryDTO">
+		
+		SELECT
+			AB.uid
+			,AB.code
+		    ,IFNULL(AB.view_count, 0) AS user_view_count
+		    ,IFNULL(C.like_count, 0) AS user_like_count
+		FROM
+			(
+			SELECT
+				A.uid
+				,A.code
+		        ,B.view_count
+			FROM
+				(
+                SELECT
+					uid, code
+				FROM
+					tb_art_board_common
+				WHERE
+					uid = #{uid} AND code = #{code}
+				) A
+			LEFT JOIN
+				(
+				SELECT
+					uid, code, action, ip, COUNT(*) AS view_count
+				FROM
+					tb_art_board_history
+				WHERE
+					uid = #{uid} AND action = 'VIEW' AND ip = #{ip}
+				GROUP BY
+					uid
+				) B
+			ON
+				A.uid = B.uid AND A.code = B.code
+			) AB
+		LEFT JOIN
+		    (
+			SELECT
+				uid, code, action, mem_id, COUNT(*) AS like_count
+			FROM
+				tb_art_board_history
+			WHERE
+				uid = #{uid} AND action = 'LIKE' AND mem_id = #{mem_id}
+			GROUP BY
+				uid
+			) C
+		ON
+			AB.uid = C.uid AND AB.code = C.code
+		
 	</select>
 
 	<insert id="boardCommonWrite" parameterType="BoardCommonWriteDTO">
 		INSERT INTO
 			tb_art_board_common
 			(
-				id
+				code
+				,id
 				,nick
 				,title
 				,contents
@@ -52,7 +305,8 @@
 			)
 		VALUES
 			(
-				#{id}
+				#{code}
+				,#{id}
 				,#{nick}
 				,#{title}
 				,#{contents}
@@ -61,6 +315,63 @@
 				,NOW()
 			)
 	</insert>
+	
+	<insert id="insertBoardHistory" parameterType="BoardCommonHistoryDTO">
+		INSERT INTO
+			tb_art_board_history
+			(
+				uid
+				,code
+				,action
+				,mem_id
+				,ip
+				,date
+			)
+		VALUES
+			(
+				#{uid}
+				,#{code}
+				,#{action}
+				,#{mem_id}
+				,#{ip}
+				,NOW()
+			)
+	</insert>
+	
+	<insert id="insertBoardReply" parameterType="BoardCommonReplyDTO">
+		INSERT INTO
+			tb_art_board_reply
+			(
+				code
+				,article_uid
+				,ancestor_uid
+				,parent_uid
+				,seq
+				,mem_id
+				,mem_nick
+				,rep_contents
+				,reg_date
+			)
+		VALUES
+			(
+				#{code}
+				,#{article_uid}
+				,#{ancestor_uid}
+				,#{parent_uid}
+				,#{seq}
+				,#{mem_id}
+				,#{mem_nick}
+				,#{rep_contents}
+				,NOW()
+			)
+	</insert>
+	
+	<delete id="deleteBoardLikeHistory" parameterType="BoardCommonHistoryDTO">
+		DELETE FROM
+			tb_art_board_history
+		WHERE
+			uid = #{uid} AND code = #{code} AND action = #{action} AND mem_id = #{mem_id}
+	</delete>
 	
 	<update id="boardCommonModify" parameterType="BoardCommonModifyDTO">
 		UPDATE
@@ -72,7 +383,36 @@
 			,allow_rep = #{allowRep}
 			,mod_date = NOW()
 		WHERE
-			uid = #{uid}
+			code = #{code} AND uid = #{uid} AND id = #{id}
+	</update>
+	
+	<update id="boardCommonDelete" parameterType="BoardCommonModifyDTO">
+		UPDATE
+			tb_art_board_common
+		SET
+			st = 1
+			,mod_date = NOW()
+		WHERE
+			code = #{code} AND uid = #{uid} AND id = #{id}
+	</update>
+	
+	<update id="boardReplyModify" parameterType="BoardCommonReplyDTO">
+		UPDATE
+			tb_art_board_reply	
+		SET
+			rep_contents = #{rep_contents}
+			,mod_date = NOW()
+		WHERE
+			rep_uid = #{rep_uid} AND code = #{code} AND article_uid = #{article_uid} AND mem_id = #{mem_id}
+	</update>
+	
+	<update id="boardReplyDelete" parameterType="BoardCommonReplyDTO">
+		UPDATE
+			tb_art_board_reply	
+		SET
+			st = 1
+		WHERE
+			rep_uid = #{rep_uid} AND article_uid = #{article_uid} AND code = #{code}
 	</update>
 	
 </mapper>

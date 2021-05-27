@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Pagination {
 
+	String code = "";
 	int totalCount = 0;
 	int articleLimit = 0;
 	int pageLimit = 0;
@@ -15,7 +16,8 @@ public class Pagination {
 	int pageSetMin = 0;
 	int pageSetMax = 0;
 	
-	public Pagination(int totalCount, int articleLimit, int pageLimit, int thisPage) {
+	public Pagination(String code, int totalCount, int articleLimit, int pageLimit, int thisPage) {
+		this.code = code;
 		this.totalCount = totalCount;
 		this.articleLimit = articleLimit;
 		this.pageLimit = pageLimit;
@@ -46,8 +48,6 @@ public class Pagination {
 	public int getThisPageSet(int thisPage) {
 		int temp = (int) Math.floor( (double) thisPage / (this.pageLimit + 1) );
 		int thisPageSet = temp + 1;
-		System.out.println("temp : " + temp);
-		System.out.println("thisPageSet : " + thisPageSet);
 		this.thisPageSet = thisPageSet;
 		
 		return thisPageSet;
@@ -65,7 +65,6 @@ public class Pagination {
 	public int getPageSetMin() {
 		
 		int pageSetMin = (this.thisPageSet - 1) * this.pageLimit + 1;
-		System.out.println("pageSetMin : " + pageSetMin);
 		this.pageSetMin = pageSetMin;
 		
 		return pageSetMin;
@@ -82,7 +81,7 @@ public class Pagination {
 	
 	public int getPageTotalLimit() {
 		int pageTotalLimit = 0;
-		int temp = (int) Math.ceil( (double) this.totalCount / this.articleLimit);
+		int temp = (int) Math.ceil( (double) this.totalCount / this.articleLimit );
 		if ( temp == 0 ) {
 			pageTotalLimit = 1;
 		} else {
@@ -121,8 +120,13 @@ public class Pagination {
 
 			if ( i <= pageTotalLimit ) {
 				
-				String temp = "<a href='/board/common/list?page=" + i + "'>" + i + "</a>";
-			
+				String temp = "";
+				
+				if ( i == this.thisPage ) {
+					temp = "<a href='/board/common/list?code=" + this.code + "&page=" + i + "' class='on'>" + i + "</a>";
+				} else {
+					temp = "<a href='/board/common/list?code=" + this.code + "&page=" + i + "'>" + i + "</a>";
+				}
 				pageList.add(temp);
 				resultList = Arrays.toString(pageList.toArray()).replace("[","").replace("]","").replace(",","");
 			}
@@ -130,25 +134,25 @@ public class Pagination {
 		
 		if ( this.thisPage > 1 && this.thisPageSet > 1 ) {
 			
-			prev = "<a href='/board/common/list?page=1'>처음</a>";
+			prev = "<a href='/board/common/list?code=" + this.code + "&page=1'>처음</a>";
 			
 		}
 		
 		if ( this.thisPageSet > 1 ) {
 			
-			prev += "<a href='/board/common/list?page=" + ( (this.thisPageSet - 1) * this.pageLimit) + "'>이전</a>";
+			prev += "<a href='/board/common/list?code=" + this.code + "&page=" + ( (this.thisPageSet - 1) * this.pageLimit) + "'>이전</a>";
 			
 		}
 		
 		if ( pageTotalLimit > this.thisPageSet * this.pageLimit ) {
 			
-			next = "<a href='/board/common/list?page=" + (this.thisPageSet * this.pageLimit + 1) + "'>다음</a>";
+			next = "<a href='/board/common/list?code=" + this.code + "&page=" + (this.thisPageSet * this.pageLimit + 1) + "'>다음</a>";
 			
 		}
 		
 		if ( this.thisPage < pageTotalLimit && this.thisPageSet <= pageTotalLimit / this.pageLimit ) {
 			
-			next += "<a href='/board/common/list?page=" + pageTotalLimit + "'>마지막</a>";
+			next += "<a href='/board/common/list?code=" + this.code + "&page=" + pageTotalLimit + "'>마지막</a>";
 		}
 		
 		result = prev + resultList + next;

@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class ArticleCommon {
 	private int uid;
+	private String code;
 	private String id;
 	private String nick;
 	private String title;
@@ -12,9 +13,12 @@ public class ArticleCommon {
 	private String article_pw;
 	private int st;
 	private int allow_rep;
-	private int view;
-	private int good;
-	private int bad;
 	private String reg_date;
 	private String mod_date;
+	
+	private int view_count;
+	private int like_count;
+	private String liked_mem_id;
+	
+	private int rep_count;
 }
