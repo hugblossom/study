@@ -11,8 +11,8 @@ public class MainController {
 	@GetMapping(value = "/")
 	public String getMain(HttpServletRequest request) {
 		
-		request.getSession().setAttribute("member_id", "admin");
-		request.getSession().setAttribute("member_nick", "관리자");
+//		request.getSession().setAttribute("member_id", "admin");
+//		request.getSession().setAttribute("member_nick", "관리자");
 		
 		return "main";
 	}

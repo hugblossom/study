@@ -38,18 +38,20 @@
 				id
 				,pw
 				,nick
+				,join_date
 			)
 		VALUES
 		(
 			#{id}
 			, #{pw}
 			, #{nick}
+			, NOW()
 		)
 	</insert>
 	
 	<insert id="loginHistory" parameterType="LoginHistoryDTO">
 		INSERT INTO
-			tb_art_member_login
+			tb_art_login_history
 			(
 				uid
 				,id

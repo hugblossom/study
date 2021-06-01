@@ -30,10 +30,55 @@
 		${article_common.contents}
 	</div>
 	<div class="article_like">
-		<form action="/board/common/like?code=${board_code}&uid=${article_common.uid}&page=${this_page}" method="POST">		
-			<input type="submit" class="btn btn_like ${user_like_count ne 0 ? 'on' : ''} ${sessionScope.member_id ne null and sessionScope.member_id eq article_common.id ? 'locked' : ''}" value="♥ ${article_common.like_count}">
+		<form id="likeForm">		
+			<input type="hidden" name="code" value="${board_code}">
+			<input type="hidden" name="uid" value="${article_common.uid}">
+			<input type="hidden" name="mem_id" value="${sessionScope.member_id}">
 		</form>
+		<input type="button" class="btn btn_like ${user_like_count ne 0 ? 'on' : ''} ${sessionScope.member_id ne null and sessionScope.member_id eq article_common.id ? 'locked' : ''}" value="♥ ${article_common.like_count}">
 	</div>
+	
+	<script src="/resources/js/jQuery.serializeObject.js"></script>
+	<script>
+	
+		$('.btn_like').on("click", function() {
+			
+			var locked = $(this).hasClass("locked");
+			
+			if ( !locked ) {
+				ajax();
+			}
+			
+		});
+	
+		function ajax(frm) {
+			var formData = $("#likeForm").serializeObject();
+			var thisBtn = $('.btn_like');
+			$.ajax({
+				url:'/board/common/like',
+				type:'POST',
+				contentType:'application/json',
+				data:JSON.stringify(formData),
+				success: function(data) {
+					if ( ${user_like_count} == 0 ) {
+						thisBtn.val("♥ " + (${article_common.like_count} + parseInt(data)) );	
+					} else {
+						thisBtn.val("♥ " + (${article_common.like_count - 1} + parseInt(data)) );
+					}
+					
+					if ( data != 0 ) {
+						thisBtn.addClass("on");
+					} else {
+						thisBtn.removeClass("on");
+					}
+				},error:function(xhs, status, error) {
+					alert("error");
+				}
+			});
+			return false;
+		}
+	</script>
+	
 	<form id="deleteForm" action="/board/common/delete?&uid=${article_common.uid}&page=${this_page}" method="POST">
 		<input type="hidden" name="code" value="${board_code}">
 		<input type="hidden" name="uid" value="${article_common.uid}">

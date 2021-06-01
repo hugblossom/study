@@ -14,8 +14,11 @@ import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.artlier.web.domain.ArticleCommon;
 import com.artlier.web.dto.BoardCommonModifyDTO;
@@ -25,6 +28,7 @@ import com.artlier.web.dto.BoardCommonHistoryDTO;
 import com.artlier.web.dto.PaginationDTO;
 import com.artlier.web.mapper.BoardMapper;
 import com.artlier.web.util.Pagination;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 @RequestMapping("/board")
@@ -42,14 +46,6 @@ public class BoardController {
 		
 		try {
 			
-			if ( !ObjectUtils.isEmpty(acList) ) {
-				
-				String notFound = "게시물이 존재하지 않습니다.";
-				
-				model.addAttribute("article_common", notFound);
-				
-			}
-				
 				totalCount = boardMapper.countCommonList(code);
 				
 				Pagination pagination = new Pagination(code, totalCount, 10, 5, page);
@@ -65,7 +61,11 @@ public class BoardController {
 				dto.setArticles(articles);
 				
 				acList = boardMapper.selectCommonListByPage(dto);
+				
+				int listSize = acList.size();
+								
 				model.addAttribute("article_common", acList);
+				model.addAttribute("list_size", listSize);
 				model.addAttribute("article_count", totalCount);
 				model.addAttribute("this_page", page);
 				model.addAttribute("article_limit", articles);
@@ -135,9 +135,7 @@ public class BoardController {
 			bcrSetDTO.setCode(code);
 			
 			List<BoardCommonReplyDTO> bcrGetDTO = boardMapper.selectReplyListByUidAndSeq(bcrSetDTO);
-			
-			System.out.println(bcrGetDTO);
-			
+						
 			if ( !ObjectUtils.isEmpty(bcrGetDTO) ) {
 				model.addAttribute("replyList", bcrGetDTO);
 			}
@@ -265,45 +263,6 @@ public class BoardController {
 		}
 		
 		return direction;
-	}
-	
-	@PostMapping("/common/like")
-	public String postLike(@RequestParam int uid, @RequestParam String code, @RequestParam int page, HttpServletRequest request) {
-		
-		String memId = "GUEST";
-		String ip = request.getRemoteAddr();
-		String action = "LIKE";
-		boolean liked = true;
-	
-		try {
-			
-			BoardCommonHistoryDTO dto = new BoardCommonHistoryDTO();
-			
-			if ( !ObjectUtils.isEmpty(request.getSession().getAttribute("member_id")) ) {
-				memId = (String) request.getSession().getAttribute("member_id");
-			}
-			
-			dto.setUid(uid);
-			dto.setCode(code);
-			dto.setAction(action);
-			dto.setMem_id(memId);
-			dto.setIp(ip);
-			
-			int likeCount = boardMapper.selectBoardHistory(dto).getUser_like_count();
-			if ( likeCount == 0 ) {
-				liked = false;
-			}
-			
-			if ( liked ) {
-				boardMapper.deleteBoardLikeHistory(dto);
-			} else {
-				boardMapper.insertBoardHistory(dto);
-			}
-		
-		} catch ( Exception e) {
-			
-		}
-		return "redirect:/board/common/detail?code=" + code + "&uid=" + uid + "&page=" + page;
 	}
 	
 	@PostMapping("/common/reply/write")

@@ -3,7 +3,7 @@
 
 <div class="login_box">
 	<div class="inner_box">
-	<form action="/member/login" method="POST">
+	<form id="loginForm" action="/member/login" method="POST">
 		<p class="row">
 			<span class="title">아이디</span><input type="text" name="id">
 		</p>

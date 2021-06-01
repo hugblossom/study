@@ -39,7 +39,7 @@
 			</td>
 		</tr>
 	</c:forEach>
-	<c:if test="${article_common eq null}">
+	<c:if test="${list_size eq 0}">
 		<tr>
 			<td colspan="10">게시물이 존재하지 않습니다.</td>
 		</tr>
