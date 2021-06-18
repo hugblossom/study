@@ -19,7 +19,7 @@
 		<tr>
 			<td>${article_count - (this_page - 1) * article_limit - i.index}</td>
 			<td>
-				<a href="/board/common/detail?code=${board_code}&page=${this_page}&uid=${row.uid}">${row.title}
+				<a href="/board/common/cert?code=${board_code}&page=${this_page}&uid=${row.uid}">${row.title}
 					<c:if test="${row.allow_rep ne 0}">
 					<span class="reply_count">${row.rep_count}</span>
 					</c:if>

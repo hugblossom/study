@@ -130,11 +130,9 @@
 				tb_art_board_reply
 			WHERE
 				code = #{code} AND article_uid = #{article_uid} AND st = 0 AND ancestor_uid != 0
-			ORDER BY
-				seq DESC
 			)
 		ORDER BY
-			uid DESC, seq DESC
+			uid DESC, seq
 		
 	</select>
 	
@@ -289,6 +287,45 @@
 			AB.uid = C.uid AND AB.code = C.code
 		
 	</select>
+	
+	<select id="boardCert" parameterType="ArticleCommon" resultType="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			tb_art_board_common
+		WHERE
+			code = #{code} AND uid = #{uid} AND article_pw = #{article_pw}
+	</select>
+	
+	<select id="selectBoardToken" parameterType="BoardToken" resultType="BoardToken">
+		
+		SELECT
+			code
+			,uid
+			,mem_id
+			,IF(TIME_TO_SEC(TIMEDIFF(NOW(), cert_date)) > 180, 1, 0) AS token_expired
+		FROM
+			tb_art_board_cert
+		WHERE
+			code = #{code} AND uid = #{uid} AND mem_id = #{mem_id}
+	
+	</select>
+	
+	<insert id="insertBoardToken" parameterType="BoardToken">
+		INSERT INTO
+			tb_art_board_cert
+			(
+				code
+				,uid
+				,mem_id
+			)
+		VALUES
+			(
+				#{code}
+				,#{uid}
+				,#{mem_id}
+			)
+	</insert>
 
 	<insert id="boardCommonWrite" parameterType="BoardCommonWriteDTO">
 		INSERT INTO
@@ -373,14 +410,23 @@
 			uid = #{uid} AND code = #{code} AND action = #{action} AND mem_id = #{mem_id}
 	</delete>
 	
+	<delete id="deleteExpiredBoardToken" parameterType="BoardToken">
+	
+		DELETE FROM
+			tb_art_board_cert
+		WHERE
+			code = #{code} AND uid = #{uid} AND mem_id = #{mem_id}
+	
+	</delete>
+	
 	<update id="boardCommonModify" parameterType="BoardCommonModifyDTO">
 		UPDATE
 			tb_art_board_common
 		SET
 			title = #{title}
 			,contents = #{contents}
-			,article_pw = #{articlePw}
-			,allow_rep = #{allowRep}
+			,article_pw = #{article_pw}
+			,allow_rep = #{allow_rep}
 			,mod_date = NOW()
 		WHERE
 			code = #{code} AND uid = #{uid} AND id = #{id}

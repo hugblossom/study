@@ -9,8 +9,8 @@ public class BoardCommonModifyDTO {
 	private String id;
 	private String title;
 	private String contents;
-	private String articlePw;
+	private String article_pw;
 	private int st;
-	private int allowRep;
-	private String modDate;
+	private int allow_rep;
+	private String mod_date;
 }

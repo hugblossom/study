@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +25,7 @@ import com.artlier.web.domain.ArticleCommon;
 import com.artlier.web.dto.BoardCommonModifyDTO;
 import com.artlier.web.dto.BoardCommonReplyDTO;
 import com.artlier.web.dto.BoardCommonWriteDTO;
+import com.artlier.web.dto.BoardToken;
 import com.artlier.web.dto.BoardCommonHistoryDTO;
 import com.artlier.web.dto.PaginationDTO;
 import com.artlier.web.mapper.BoardMapper;
@@ -71,13 +73,106 @@ public class BoardController {
 				model.addAttribute("article_limit", articles);
 				
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		model.addAttribute("board_code", code);
 		
 		return "/board/common/list";
+	}
+	
+	@GetMapping("/common/cert")
+	public String getCommonCert(@RequestParam String code, @RequestParam int page, @RequestParam int uid, HttpServletRequest request, Model model) {
+		
+		ArticleCommon ac = new ArticleCommon();
+		boolean secret = true;
+		ac.setCode(code);
+		ac.setUid(uid);
+		
+		HttpSession session = request.getSession();
+		String direction = "/board/common/cert";
+		
+		try {
+			
+			ArticleCommon article = boardMapper.selectCommonListByUid(ac);
+			
+			if ( !StringUtils.hasText(article.getArticle_pw()) ) {
+				
+				secret = false;
+				
+			}
+			
+			BoardToken bt = new BoardToken();
+			bt.setCode(code);
+			bt.setUid(uid);
+			bt.setMem_id((String)session.getAttribute("member_id"));
+			
+			BoardToken getBoardToken = boardMapper.selectBoardToken(bt);
+			
+			if ( !secret || article.getId().equals(session.getAttribute("member_id")) ) {
+								
+				direction = "redirect:/board/common/detail?code=" + code + "&uid=" + uid + "&page=" + page;
+				
+			}
+
+			if ( !ObjectUtils.isEmpty(getBoardToken) ) {
+				
+				if ( getBoardToken.isToken_expired() ) {
+					
+					boardMapper.deleteExpiredBoardToken(getBoardToken);
+					
+				} else {
+					
+					direction = "redirect:/board/common/detail?code=" + code + "&uid=" + uid + "&page=" + page;
+					
+				}
+				
+			}
+			
+				
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		
+		model.addAttribute("board_code", code);
+		model.addAttribute("article_uid", uid);
+		model.addAttribute("this_page", page);
+		
+		return direction;
+	}
+	
+	@PostMapping("/common/cert")
+	public String postCommonCert(@RequestParam String code, @RequestParam int page, @RequestParam int uid, HttpServletRequest request, Model model, ArticleCommon ac) {
+		ac.setUid(uid);
+		ac.setCode(code);
+		
+		String direction = "redirect:/board/common/list?code=" + code + "&page=" + page;
+		HttpSession session = request.getSession();
+		
+		try {
+			
+			int passwordCheck = boardMapper.boardCert(ac);
+			
+			if ( passwordCheck > 0 ) {
+
+				BoardToken bt = new BoardToken();
+				bt.setCode(code);
+				bt.setUid(uid);
+				bt.setMem_id((String)session.getAttribute("member_id"));
+				
+				boardMapper.insertBoardToken(bt);
+				
+				direction = "redirect:/board/common/detail?code=" + code + "&uid=" + uid + "&page=" + page;
+				
+			}
+			
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+		
+		return direction;
 	}
 	
 	@GetMapping("/common/detail")
@@ -90,13 +185,44 @@ public class BoardController {
 		int viewCount = 0;
 		int likeCount = 0;
 	
+		String direction = "/board/common/detail";
+		
+		HttpSession session = request.getSession();
+		
+		if ( !ObjectUtils.isEmpty(request.getSession().getAttribute("member_id")) ) {
+			memId = (String) request.getSession().getAttribute("member_id");
+		}
+	
 		try {
 			
+			ArticleCommon articleUid = new ArticleCommon();
+			articleUid.setUid(uid); 
+			
+			ArticleCommon articleCommon = boardMapper.selectCommonListByUid(articleUid);
+			
+			if ( !ObjectUtils.isEmpty(articleCommon) ) {
+				
+				if ( StringUtils.hasText(articleCommon.getArticle_pw()) || !articleCommon.getId().equals(memId) ) {
+				
+					BoardToken setBoardToken = new BoardToken();
+					setBoardToken.setCode(code);
+					setBoardToken.setUid(uid);
+					setBoardToken.setMem_id(memId);
+					
+					BoardToken getBoardToken = boardMapper.selectBoardToken(setBoardToken);
+					
+					if ( ObjectUtils.isEmpty(getBoardToken) || getBoardToken.isToken_expired() ) {
+						
+						boardMapper.deleteExpiredBoardToken(setBoardToken);
+						
+						direction = "redirect:/board/common/list?code=" + code + "&page=" + page;
+						
+					}
+				}
+			}
+
 			BoardCommonHistoryDTO dto = new BoardCommonHistoryDTO();
 			
-			if ( !ObjectUtils.isEmpty(request.getSession().getAttribute("member_id")) ) {
-				memId = (String) request.getSession().getAttribute("member_id");
-			}
 			dto.setMem_id(memId);
 			dto.setUid(uid);
 			dto.setCode(code);
@@ -125,9 +251,11 @@ public class BoardController {
 			ac = boardMapper.selectCommonListByUid(uidAndCodeDTO);
 			
 			if ( !ObjectUtils.isEmpty(ac) ) {
+
 				model.addAttribute("board_code", code);
 				model.addAttribute("article_common", ac);
 				model.addAttribute("this_page", page);
+				
 			}
 			
 			BoardCommonReplyDTO bcrSetDTO = new BoardCommonReplyDTO();
@@ -148,7 +276,7 @@ public class BoardController {
 		model.addAttribute("user_view_count", viewCount);
 		model.addAttribute("user_like_count", likeCount);
 		
-		return "/board/common/detail";
+		return direction;
 	}
 	
 	@GetMapping("/common/write")
@@ -181,7 +309,7 @@ public class BoardController {
 			direction = "redirect:/board/common/detail?code=" + code + "&page=1" + resultUid;
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
@@ -206,7 +334,7 @@ public class BoardController {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
@@ -230,7 +358,7 @@ public class BoardController {
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 	
@@ -246,7 +374,6 @@ public class BoardController {
 		
 		try {
 			
-			System.out.println(dto);
 			int result = boardMapper.boardCommonDelete(dto);
 			
 			if ( result < 1 ) {
@@ -258,7 +385,6 @@ public class BoardController {
 			direction ="redirect:/board/common/list?code=" + code + "&page=" + page;
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -273,12 +399,11 @@ public class BoardController {
 			int result = boardMapper.insertBoardReply(dto);
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		return "redirect:/board/common/detail?code=" + code + "&uid=" + uid + "&page=" + page;
-	}
+	} 
 	
 	@PostMapping("/common/reply/modify")
 	public String postReplyModify(@RequestParam int uid, @RequestParam String code, @RequestParam int page, BoardCommonReplyDTO dto, Model model) {
@@ -288,7 +413,6 @@ public class BoardController {
 			int result = boardMapper.boardReplyModify(dto);
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -303,7 +427,6 @@ public class BoardController {
 			int result = boardMapper.boardReplyDelete(dto);
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

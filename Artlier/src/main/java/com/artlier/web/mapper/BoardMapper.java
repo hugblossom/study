@@ -10,6 +10,7 @@ import com.artlier.web.dto.BoardCommonHistoryDTO;
 import com.artlier.web.dto.BoardCommonModifyDTO;
 import com.artlier.web.dto.BoardCommonReplyDTO;
 import com.artlier.web.dto.BoardCommonWriteDTO;
+import com.artlier.web.dto.BoardToken;
 import com.artlier.web.dto.PaginationDTO;
 
 @Mapper
@@ -30,5 +31,9 @@ public interface BoardMapper {
 	List<BoardCommonReplyDTO> selectReplyListByUidAndSeq(BoardCommonReplyDTO dto) throws SQLException;
 	int boardReplyModify(BoardCommonReplyDTO dto) throws SQLException;
 	int boardReplyDelete(BoardCommonReplyDTO dto) throws SQLException;
+	int boardCert(ArticleCommon ac) throws SQLException;
+	int insertBoardToken(BoardToken bc) throws SQLException;
+	BoardToken selectBoardToken(BoardToken bc) throws SQLException;
+	int deleteExpiredBoardToken(BoardToken bc) throws SQLException;
 	
 }

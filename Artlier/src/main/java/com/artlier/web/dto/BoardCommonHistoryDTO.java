@@ -1,6 +1,5 @@
 package com.artlier.web.dto;
 
-import lombok.Builder;
 import lombok.Data;
 
 @Data
