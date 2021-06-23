@@ -31,6 +31,69 @@
 		SELECT COUNT(*) AS cnt FROM tb_art_member WHERE id = #{id}
 	</select>
 	
+	<select id="selectNotificationListById" parameterType="NotificationDTO" resultType="NotificationDTO">
+	
+		SELECT
+			*
+		FROM
+			(
+			SELECT
+				target
+				,(
+					CASE
+						WHEN target = 'article' THEN '게시글'
+						WHEN target = 'reply' THEN '댓글'
+					END
+				) AS target_name
+				,target_mem_id
+				,target_code
+				,target_uid
+				,target_page
+				,uid
+				,mem_id
+				,mem_nick
+				,notify_action
+				,(
+					CASE
+						WHEN notify_action = 'REPLY' THEN '댓글'
+						WHEN notify_action = 'LIKE' THEN '좋아요'
+					END
+				) AS notify_action_name
+				,checked
+				,rep_contents AS contents
+			FROM
+				tb_art_notification A
+				LEFT JOIN
+					(
+					SELECT
+						code
+						,rep_uid
+						,rep_contents
+					FROM
+						tb_art_board_reply
+					) B
+				ON
+					A.target_code = B.code AND A.uid = B.rep_uid
+			) AB
+			LEFT JOIN
+				(
+				SELECT
+					target_mem_id
+					,count(*) AS total_count
+					,count(IF(checked = 1, null, checked)) AS new_count
+				FROM
+					tb_art_notification
+				WHERE
+					target_mem_id = #{target_mem_id}
+				GROUP BY
+					target_mem_id) C
+			ON
+				AB.target_mem_id = C.target_mem_id
+		WHERE
+			AB.target_mem_id = #{target_mem_id} AND AB.mem_id != #{mem_id}
+			
+	</select>	
+	
 	<insert id="memberJoin" parameterType="Member">
 		INSERT INTO
 			tb_art_member
@@ -68,5 +131,34 @@
 			, #{ip}
 		)
 	</insert>
+	
+	<update id="updateNotificationChecked" parameterType="NotificationDTO">
+	
+		UPDATE
+			tb_art_notification
+		SET
+			checked = 1
+		WHERE
+			target = #{target} AND target_code = #{target_code} AND target_uid = #{target_uid} AND uid = #{uid} AND mem_id = #{mem_id} AND notify_action = #{notify_action}
+	
+	</update>
+	
+	<update id="deleteTargetNotification" parameterType="NotificationDTO">
+	
+		DELETE FROM
+			tb_art_notification
+		WHERE
+			target = #{target} AND target_code = #{target_code} AND target_uid = #{target_uid} AND uid = #{uid} AND mem_id = #{mem_id} AND notify_action = #{notify_action}
+	
+	</update>
+	
+	<update id="deleteAllNotification" parameterType="NotificationDTO">
+	
+		DELETE FROM
+			tb_art_notification
+		WHERE
+			target_mem_id = #{target_mem_id}
+	
+	</update>
 
 </mapper>

@@ -11,6 +11,7 @@ import com.artlier.web.dto.BoardCommonModifyDTO;
 import com.artlier.web.dto.BoardCommonReplyDTO;
 import com.artlier.web.dto.BoardCommonWriteDTO;
 import com.artlier.web.dto.BoardToken;
+import com.artlier.web.dto.NotificationDTO;
 import com.artlier.web.dto.PaginationDTO;
 
 @Mapper
@@ -35,5 +36,7 @@ public interface BoardMapper {
 	int insertBoardToken(BoardToken bc) throws SQLException;
 	BoardToken selectBoardToken(BoardToken bc) throws SQLException;
 	int deleteExpiredBoardToken(BoardToken bc) throws SQLException;
+	int insertNotification(NotificationDTO dto) throws SQLException;
+	BoardCommonReplyDTO selectLastInsertReply(BoardCommonReplyDTO dto) throws SQLException;
 	
 }

@@ -311,6 +311,21 @@
 	
 	</select>
 	
+	<select id="selectLastInsertReply" parameterType="BoardCommonReplyDTO" resultType="BoardCommonReplyDTO">
+	
+		SELECT
+			rep_uid
+		FROM
+			tb_art_board_reply
+		WHERE
+			code = #{code} AND mem_id = #{mem_id}
+		ORDER BY
+			rep_uid DESC
+		LIMIT
+			1
+		
+	</select>
+		
 	<insert id="insertBoardToken" parameterType="BoardToken">
 		INSERT INTO
 			tb_art_board_cert
@@ -384,6 +399,7 @@
 				,ancestor_uid
 				,parent_uid
 				,seq
+				,target_mem_id
 				,mem_id
 				,mem_nick
 				,rep_contents
@@ -396,11 +412,42 @@
 				,#{ancestor_uid}
 				,#{parent_uid}
 				,#{seq}
+				,#{target_mem_id}
 				,#{mem_id}
 				,#{mem_nick}
 				,#{rep_contents}
 				,NOW()
 			)
+	</insert>
+	
+	<insert id="insertNotification" parameterType="NotificationDTO">
+	
+		INSERT INTO
+			tb_art_notification
+			(
+				target
+				,target_mem_id
+				,target_code
+				,target_uid
+				,target_page
+				,uid
+				,mem_id
+				,mem_nick
+				,notify_action
+			)
+		VALUES
+			(
+				#{target}
+				,#{target_mem_id}
+				,#{target_code}
+				,#{target_uid}
+				,#{target_page}
+				,#{uid}
+				,#{mem_id}
+				,#{mem_nick}
+				,#{notify_action}
+			)
+	
 	</insert>
 	
 	<delete id="deleteBoardLikeHistory" parameterType="BoardCommonHistoryDTO">

@@ -26,6 +26,7 @@ import com.artlier.web.dto.BoardCommonModifyDTO;
 import com.artlier.web.dto.BoardCommonReplyDTO;
 import com.artlier.web.dto.BoardCommonWriteDTO;
 import com.artlier.web.dto.BoardToken;
+import com.artlier.web.dto.NotificationDTO;
 import com.artlier.web.dto.BoardCommonHistoryDTO;
 import com.artlier.web.dto.PaginationDTO;
 import com.artlier.web.mapper.BoardMapper;
@@ -397,6 +398,29 @@ public class BoardController {
 		try {
 			
 			int result = boardMapper.insertBoardReply(dto);
+						
+			BoardCommonReplyDTO lastInsertReply = boardMapper.selectLastInsertReply(dto);
+			
+			NotificationDTO nDTO = new NotificationDTO();
+			
+			String target = "";
+			if ( dto.getParent_uid() == 0 ) {
+				target = "article";
+			} else {
+				target = "reply";
+			}
+			
+			nDTO.setTarget(target);
+			nDTO.setTarget_mem_id(dto.getTarget_mem_id());
+			nDTO.setTarget_code(code);
+			nDTO.setTarget_uid(uid);
+			nDTO.setTarget_page(Integer.toString(page));
+			nDTO.setUid(lastInsertReply.getRep_uid());
+			nDTO.setMem_id(dto.getMem_id());
+			nDTO.setMem_nick(dto.getMem_nick());
+			nDTO.setNotify_action("REPLY");
+			
+			boardMapper.insertNotification(nDTO);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

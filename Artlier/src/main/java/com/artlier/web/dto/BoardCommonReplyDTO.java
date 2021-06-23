@@ -11,6 +11,7 @@ public class BoardCommonReplyDTO {
 	private int ancestor_uid;
 	private int parent_uid;
 	private int seq;
+	private String target_mem_id;
 	private String mem_id;
 	private String mem_nick;
 	private String rep_contents;

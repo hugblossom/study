@@ -30,6 +30,12 @@ $(document).ready(function() {
 
 	});
 	
+	$('.notification_count').click(function() {
+	
+		$('.notification_list_box').toggleClass("on");
+		
+	});
+	
 	
 	
 });

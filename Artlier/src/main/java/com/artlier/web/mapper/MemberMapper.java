@@ -9,6 +9,7 @@ import com.artlier.web.domain.Member;
 import com.artlier.web.dto.JoinDTO;
 import com.artlier.web.dto.LoginDTO;
 import com.artlier.web.dto.LoginHistoryDTO;
+import com.artlier.web.dto.NotificationDTO;
 
 @Mapper
 public interface MemberMapper {
@@ -18,7 +19,10 @@ public interface MemberMapper {
 	Member selectById(LoginDTO dto) throws SQLException;
 	Member memberLogin(LoginDTO dto) throws SQLException;
 	int loginHistory(LoginHistoryDTO dto) throws SQLException;
-	
-	int idExist(String memId) throws SQLException; 
+	int idExist(String memId) throws SQLException;
+	List<NotificationDTO> selectNotificationListById(String memId) throws SQLException;
+	int updateNotificationChecked(NotificationDTO dto) throws SQLException;
+	int deleteTargetNotification(NotificationDTO dto) throws SQLException;
+	int deleteAllNotification(NotificationDTO dto) throws SQLException;
 	
 }

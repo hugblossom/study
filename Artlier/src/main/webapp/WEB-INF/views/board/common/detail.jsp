@@ -111,6 +111,7 @@
 					<form action="/board/common/reply/write?uid=${article_common.uid}&page=${this_page}" method="POST">
 						<input type="hidden" name="code" value="${board_code}">
 						<input type="hidden" name="article_uid" value="${article_common.uid}">
+						<input type="hidden" name="target_mem_id" value="${article_common.id}">
 						<input type="hidden" name="mem_id" value="${sessionScope.member_id}">
 						<input type="hidden" name="mem_nick" value="${sessionScope.member_nick}">
 						<span class="title">댓글쓰기</span>
@@ -174,6 +175,7 @@
 						<input type="hidden" name="ancestor_uid" value="${row.parent_uid eq 0 ? row.rep_uid : row.parent_uid}">
 						<input type="hidden" name="parent_uid" value="${row.rep_uid}">
 						<input type="hidden" name="seq" value="${row.seq + 1}">
+						<input type="hidden" name="target_mem_id" value="${row.mem_id}">
 						<input type="hidden" name="mem_id" value="${sessionScope.member_id}">
 						<input type="hidden" name="mem_nick" value="${sessionScope.member_nick}">
 						<span class="title">댓글쓰기</span>
