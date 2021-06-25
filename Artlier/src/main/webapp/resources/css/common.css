@@ -6,11 +6,13 @@ a { text-decoration: none; }
 header { background: #f5f5fa; }
 textarea { font-size: 1rem; resize: none; }
 
+ol { padding-left: 20px; }
+
 .member_box .tool_box { float: left; margin-right: 20px; }
 .member_box .notification_box { float: left; }
 .member_box .notification_box .notification_count { cursor: pointer; border: 1px solid #56555c; }
 .member_box .notification_box .notification_count span { font-weight: bolder; }
-.member_box .notification_box .notification_list_box { z-index: 1; position: absolute; padding: 10px 15px 10px 30px; border: 2px solid #56555c; border-radius: 3px; background: #fff; }
+.member_box .notification_box .notification_list_box { z-index: 1; position: absolute; padding: 10px 15px; border: 2px solid #56555c; border-radius: 3px; background: #fff; }
 .member_box .notification_box .notification_list_box:not(.on) { display: none; }
 .member_box .notification_box .notification_list_box .notification_list { margin-bottom: 10px; border-bottom: 1px solid #ccc; }
 .member_box .notification_box .notification_list_box .notification_list > li:not(:last-child) { border-bottom: 1px solid #ccc; }
@@ -58,7 +60,8 @@ input[type=password] { height: 25px; vertical-align: middle; padding: 0 10px; bo
 .article_box .article_info .info_list > li span { display: inline-block; vertical-align: top; position: relative; padding: 5px 10px; }
 .article_box .article_info .info_list > li span.title::before { z-index: -1; content: ''; width: 100%; height: 1000px; display: block; position: absolute; left: 0; top: 0; background: #f5f5fa; }
 .article_box .article_info .info_list > li::before{ z-index: -2; content: ''; width: 10000px; height: 0; display: block; position: absolute; left: 0; top: -1px; border-top: 1px solid #56555c; }
-.article_box .article_contents { padding: 20px 10px; border-bottom: 1px solid #ddd; }
+.article_box .article_contents { padding: 20px 10px; }
+.article_box .article_contents:not(:last-child) { border-bottom: 1px solid #ddd; }
 .article_box .article_like { padding: 10px; border-bottom: 1px solid #ddd; }
 .article_box .btn_box { padding: 10px; } 
 

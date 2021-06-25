@@ -5,11 +5,13 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.artlier.web.domain.ArticleCommon;
 import com.artlier.web.domain.Member;
 import com.artlier.web.dto.JoinDTO;
 import com.artlier.web.dto.LoginDTO;
 import com.artlier.web.dto.LoginHistoryDTO;
 import com.artlier.web.dto.NotificationDTO;
+import com.artlier.web.dto.PaginationDTO;
 
 @Mapper
 public interface MemberMapper {
@@ -24,5 +26,8 @@ public interface MemberMapper {
 	int updateNotificationChecked(NotificationDTO dto) throws SQLException;
 	int deleteTargetNotification(NotificationDTO dto) throws SQLException;
 	int deleteAllNotification(NotificationDTO dto) throws SQLException;
+	List<LoginHistoryDTO> selectMyLoginHistory(String memId) throws SQLException;
+	int countMyCommonList(String memId) throws SQLException;
+	List<ArticleCommon> selectMyCommonListByPage(PaginationDTO dto) throws SQLException;
 	
 }

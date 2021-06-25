@@ -8,7 +8,7 @@
 		    ,AB.view_count
 		    ,AB.like_count
 		FROM
-			tb_art_board_common C,
+			tb_art_board_common_${code} C,
 			(
 				SELECT
 					A.uid
@@ -47,11 +47,11 @@
 
 	</select>
 	
-	<select id="countCommonList" resultType="int">
+	<select id="countCommonList" resultType="Integer">
 		SELECT
 			COUNT(*) AS cnt
 		FROM
-			tb_art_board_common
+			tb_art_board_common_${code}
 		WHERE
 			code = #{code} AND st = 0
 	</select>
@@ -66,7 +66,7 @@
 				    ,IFNULL(AB.view_count, 0) AS view_count
 			    	,IFNULL(AB.like_count, 0) AS like_count
 				FROM
-					tb_art_board_common C
+					tb_art_board_common_${code} C
 				LEFT JOIN
 					(
 						SELECT
@@ -156,7 +156,7 @@
 							SELECT
 								*
 							FROM
-								tb_art_board_common C
+								tb_art_board_common_${code} C
 							WHERE
 								st = 0
 						) C
@@ -226,7 +226,7 @@
 		SELECT
 			uid
 		FROM
-			tb_art_board_common
+			tb_art_board_common_${code}
 		WHERE
 			code = #{code} AND id = #{id}
 		ORDER BY
@@ -254,7 +254,7 @@
                 SELECT
 					uid, code
 				FROM
-					tb_art_board_common
+					tb_art_board_common_${code}
 				WHERE
 					uid = #{uid} AND code = #{code}
 				) A
@@ -292,7 +292,7 @@
 		SELECT
 			COUNT(*)
 		FROM
-			tb_art_board_common
+			tb_art_board_common_${code}
 		WHERE
 			code = #{code} AND uid = #{uid} AND article_pw = #{article_pw}
 	</select>
@@ -344,7 +344,7 @@
 
 	<insert id="boardCommonWrite" parameterType="BoardCommonWriteDTO">
 		INSERT INTO
-			tb_art_board_common
+			tb_art_board_common_${code}
 			(
 				code
 				,id
@@ -468,7 +468,7 @@
 	
 	<update id="boardCommonModify" parameterType="BoardCommonModifyDTO">
 		UPDATE
-			tb_art_board_common
+			tb_art_board_common_${code}
 		SET
 			title = #{title}
 			,contents = #{contents}
@@ -481,7 +481,7 @@
 	
 	<update id="boardCommonDelete" parameterType="BoardCommonModifyDTO">
 		UPDATE
-			tb_art_board_common
+			tb_art_board_common_${code}
 		SET
 			st = 1
 			,mod_date = NOW()

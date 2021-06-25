@@ -196,10 +196,11 @@ public class BoardController {
 	
 		try {
 			
-			ArticleCommon articleUid = new ArticleCommon();
-			articleUid.setUid(uid); 
+			ArticleCommon articleInfo = new ArticleCommon();
+			articleInfo.setCode(code);
+			articleInfo.setUid(uid);
 			
-			ArticleCommon articleCommon = boardMapper.selectCommonListByUid(articleUid);
+			ArticleCommon articleCommon = boardMapper.selectCommonListByUid(articleInfo);
 			
 			if ( !ObjectUtils.isEmpty(articleCommon) ) {
 				

@@ -86,13 +86,119 @@
 				WHERE
 					target_mem_id = #{target_mem_id}
 				GROUP BY
-					target_mem_id) C
+					target_mem_id
+				) C
 			ON
 				AB.target_mem_id = C.target_mem_id
 		WHERE
 			AB.target_mem_id = #{target_mem_id} AND AB.mem_id != #{mem_id}
 			
-	</select>	
+	</select>
+	
+	<select id="selectMyLoginHistory" resultType="LoginHistoryDTO">
+	
+		SELECT
+			*
+		FROM
+			tb_art_login_history
+		WHERE
+			id = #{id}
+		ORDER BY	
+			try_date DESC
+		LIMIT
+			10
+	
+	</select>
+	
+	<select id="countMyCommonList" resultType="int">
+		SELECT
+			COUNT(*) AS cnt
+		FROM
+			tb_art_board_common_${code}
+		WHERE
+			id = #{memId} AND st = 0
+	</select>
+	
+	<select id="selectMyCommonListByPage" parameterType="paginationDTO" resultType="ArticleCommon">
+	
+		SELECT
+			*
+		FROM
+			(
+			SELECT
+				D.*
+			FROM
+				(
+					SELECT
+						C.*
+					    ,IFNULL(AB.view_count, 0) AS view_count
+				    	,IFNULL(AB.like_count, 0) AS like_count
+					FROM
+						(
+							SELECT
+								*
+							FROM
+								tb_art_board_common_${code} C
+							WHERE
+								st = 0
+						) C
+					LEFT JOIN
+						(
+							SELECT
+								A.uid
+								,A.code
+		                        ,A.action AS do_view
+								,A.view_count
+								,B.action AS do_like
+								,B.like_count
+							FROM
+								(
+									SELECT
+										uid, code, action, ip, count(*) AS view_count
+									FROM
+										tb_art_board_history
+									WHERE 
+										action = 'VIEW'
+									GROUP BY
+										uid
+								) A
+							LEFT JOIN
+								(
+									SELECT
+										uid, code, action, mem_id, count(*) AS like_count
+									FROM
+										tb_art_board_history
+									WHERE 
+										action = 'LIKE'
+									GROUP BY
+										uid
+								) B
+							ON
+								A.uid = B.uid
+						) AB
+					ON
+						C.uid = AB.uid
+				) D
+			ORDER BY
+				D.uid DESC
+			limit
+				#{pageMin}, #{articles}
+			) E
+		LEFT JOIN
+			(
+				SELECT
+					article_uid, COUNT(article_uid) AS rep_count
+				FROM
+					tb_art_board_reply
+				GROUP BY
+					article_uid
+			) F
+		ON
+			E.uid = F.article_uid
+		WHERE
+			id = #{id}
+			
+	</select>
 	
 	<insert id="memberJoin" parameterType="Member">
 		INSERT INTO

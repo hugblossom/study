@@ -15,12 +15,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.artlier.web.domain.ArticleCommon;
 import com.artlier.web.domain.Member;
 import com.artlier.web.dto.JoinDTO;
 import com.artlier.web.dto.LoginDTO;
 import com.artlier.web.dto.LoginHistoryDTO;
+import com.artlier.web.dto.PaginationDTO;
 import com.artlier.web.mapper.MemberMapper;
 import com.artlier.web.service.MemberService;
+import com.artlier.web.util.Pagination;
 
 @Controller
 @RequestMapping("/member")
@@ -139,7 +142,6 @@ public class MemberController {
 				memberMapper.loginHistory(ldto);
 			}
 		} catch ( SQLException e ) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -155,4 +157,47 @@ public class MemberController {
 		
 		return "redirect:/";
 	}
+	
+	@GetMapping("/mypage")
+	public String getMypage(HttpServletRequest request, Model model) {
+		
+		HttpSession session = request.getSession();
+		String memId = (String) session.getAttribute("member_id");
+		String code = "AL";
+		
+		try {
+			
+			List<LoginHistoryDTO> loginHistoryList = memberMapper.selectMyLoginHistory(memId);
+			
+			
+			//int totalCount = memberMapper.countMyCommonList(memId);
+			
+			//Pagination pagination = new Pagination(code, totalCount, 10, 5, page);
+			//int pageMin = pagination.getArticleStart(page);
+			//int articles = pagination.getArticleLimit();
+			//String paging = pagination.buildPagination();
+			
+			//model.addAttribute("pagination", paging);
+			
+			//PaginationDTO dto = new PaginationDTO();
+			//dto.setCode(code);
+			//dto.setPageMin(pageMin);
+			//dto.setArticles(articles);
+			
+			//List<ArticleCommon> articleList = memberMapper.selectMyCommonListByPage(dto);
+			
+			if ( !ObjectUtils.isEmpty(loginHistoryList) ) {
+				
+				model.addAttribute("loginHistoryList", loginHistoryList);
+				
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return "/member/mypage";
+	}
+	
 }

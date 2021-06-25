@@ -11,5 +11,6 @@ public class LoginHistoryDTO {
 	private String id;
 	private int succeed;
 	private String ip;
+	private String try_date;
 	
 }

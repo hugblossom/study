@@ -18,7 +18,10 @@
 				로그인해주세요 <a href="/member/login">로그인</a> <a href="/member/join">회원가입</a>
 			</c:if>
 			<c:if test="${sessionScope.member_id ne null}">
-				${sessionScope.member_nick} 님 반갑습니다 <a href="/member/list">회원리스트</a> <a href="/member/logout">로그아웃</a>
+				${sessionScope.member_nick} 님 반갑습니다
+				<a href="/member/list">회원리스트</a>
+				<a href="/member/mypage">마이페이지</a>
+				<a href="/member/logout">로그아웃</a>
 			</c:if>
 			</div>
 			<c:if test="${sessionScope.member_id ne null}">
